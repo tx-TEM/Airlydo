@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FCA72F1598E3D0E1AB88218ED1FDB1A2"
+               BlueprintIdentifier = "42609F3C877971DEA81DC53515938295"
                BuildableName = "Pods_Airlydo.framework"
                BlueprintName = "Pods-Airlydo"
                ReferencedContainer = "container:Pods.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "FCA72F1598E3D0E1AB88218ED1FDB1A2"
+            BlueprintIdentifier = "42609F3C877971DEA81DC53515938295"
             BuildableName = "Pods_Airlydo.framework"
             BlueprintName = "Pods-Airlydo"
             ReferencedContainer = "container:Pods.xcodeproj">

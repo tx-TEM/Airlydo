@@ -12,6 +12,7 @@ import SlideMenuControllerSwift
 import UserNotifications
 import NotificationCenter
 import GoogleSignIn
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate  {
@@ -21,9 +22,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        // Google Firestore
+        FirebaseApp.configure()
+        let db = Firestore.firestore()
+        
+        
         // Google Sign-in
         // Initialize sign-in
-        GIDSignIn.sharedInstance().clientID = "752419583646-pfbeb5skfj6h84tkmakdnq6berefieqt.apps.googleusercontent.com"
+        //GIDSignIn.sharedInstance().clientID = "752419583646-pfbeb5skfj6h84tkmakdnq6berefieqt.apps.googleusercontent.com"
+        GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
         GIDSignIn.sharedInstance().delegate = self
         
         if GIDSignIn.sharedInstance().hasAuthInKeychain() {
@@ -129,6 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
                                                  annotation: options[UIApplicationOpenURLOptionsKey.annotation])
     }
     
+    
 
     lazy var persistentContainer: NSPersistentContainer = {
         /*
@@ -185,7 +193,19 @@ extension AppDelegate : GIDSignInDelegate {
             print(user.profile.email)
         }
         
-        print("AppDelegate")
+        // Googleのトークンを渡し、Firebaseクレデンシャルを取得する。
+        guard let authentication = user.authentication else { return }
+        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
+                                                       accessToken: authentication.accessToken)
+        // Firebaseにログインする。
+        Auth.auth().signIn(with: credential) { (user, error) in
+            if let error = error {
+                // ...
+                return
+            }
+            // User is signed in
+
+        }
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,

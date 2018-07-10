@@ -25,16 +25,14 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.752419583646-pfbeb5skfj6h84tkmakdnq6berefieqt</string>
+				<string>com.googleusercontent.apps.752419583646-ae3pu6kofgd5v8ktbvni21lg2rpmalvs</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.Airlydo.Airlydo</string>
-			</array>
+			<array/>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>

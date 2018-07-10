@@ -37,7 +37,7 @@
 		6F4DB02C20CF0DEA009AC462 /* TaskListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DB02B20CF0DEA009AC462 /* TaskListModel.swift */; };
 		6F4DB02E20CFE511009AC462 /* LeftModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4DB02D20CFE511009AC462 /* LeftModel.swift */; };
 		6F6A290320BAB52C00A83F17 /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A290220BAB52C00A83F17 /* LeftViewController.swift */; };
-		6F7A3F5720E3BC5E0059D804 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F7A3F5620E3BC5D0059D804 /* GoogleService-Info.plist */; };
+		6F76C99C20F225610029FD7E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6F76C99B20F225610029FD7E /* GoogleService-Info.plist */; };
 		6F7A3F5920E421EB0059D804 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7A3F5820E421EB0059D804 /* SignInViewController.swift */; };
 		6F7DB27020DFA04700074FBA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F7DB26F20DFA04700074FBA /* Main.storyboard */; };
 		6F9A729520D15282008BC21B /* TaskDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9A729420D15282008BC21B /* TaskDetailModel.swift */; };
@@ -118,7 +118,7 @@
 		6F4DB02B20CF0DEA009AC462 /* TaskListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListModel.swift; sourceTree = "<group>"; };
 		6F4DB02D20CFE511009AC462 /* LeftModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftModel.swift; sourceTree = "<group>"; };
 		6F6A290220BAB52C00A83F17 /* LeftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
-		6F7A3F5620E3BC5D0059D804 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6F76C99B20F225610029FD7E /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6F7A3F5820E421EB0059D804 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		6F7DB26F20DFA04700074FBA /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		6F9A729420D15282008BC21B /* TaskDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailModel.swift; sourceTree = "<group>"; };
@@ -257,7 +257,7 @@
 				6FAA758120B9348E003E3272 /* View */,
 				6F9A729620D53462008BC21B /* Custom_View */,
 				6F2F3DB120A6B3760081E5F9 /* Info.plist */,
-				6F7A3F5620E3BC5D0059D804 /* GoogleService-Info.plist */,
+				6F76C99B20F225610029FD7E /* GoogleService-Info.plist */,
 				6F2F3DA220A6B3740081E5F9 /* AppDelegate.swift */,
 				6F2F3DAC20A6B3760081E5F9 /* Assets.xcassets */,
 				6F2F3DAE20A6B3760081E5F9 /* LaunchScreen.storyboard */,
@@ -474,7 +474,7 @@
 				6F4DB02A20CEFDF5009AC462 /* Menu.png in Resources */,
 				6F4DB02920CEFDF5009AC462 /* Check.png in Resources */,
 				6F4DB02820CEFDF5009AC462 /* Plus.png in Resources */,
-				6F7A3F5720E3BC5E0059D804 /* GoogleService-Info.plist in Resources */,
+				6F76C99C20F225610029FD7E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,25 +556,41 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Airlydo/Pods-Airlydo-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BoringSSL/openssl.framework",
 				"${BUILT_PRODUCTS_DIR}/Eureka/Eureka.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMOAuth2/GTMOAuth2.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/MCSwipeTableViewCell/MCSwipeTableViewCell.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SlideMenuControllerSwift/SlideMenuControllerSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC/GRPCClient.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-ProtoRPC/ProtoRPC.framework",
+				"${BUILT_PRODUCTS_DIR}/gRPC-RxLibrary/RxLibrary.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Eureka.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMOAuth2.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MCSwipeTableViewCell.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SlideMenuControllerSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GRPCClient.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ProtoRPC.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxLibrary.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -797,7 +813,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Airlydo.Airlydo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Airlydo.AirlyIO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -815,7 +831,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.Airlydo.Airlydo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Airlydo.AirlyIO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
