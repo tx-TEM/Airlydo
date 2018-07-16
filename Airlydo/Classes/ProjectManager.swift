@@ -8,46 +8,86 @@
 
 import Foundation
 import RealmSwift
+import Firebase
 
 class ProjectManager {
     
-    // Get the default Realm
-    lazy var realm = try! Realm()
+    // Firebase
+    let db = Firestore.firestore()
     
-    // Read Project and Return List type
-    func readAllData()-> List<Project> {
-        if let list = realm.objects(ProjectWrapper.self).first?.projectList {
-            return list
-        }else{
-            let listTWrapper = ProjectWrapper()
-            
-            try! realm.write {
-                realm.add(listTWrapper)
-            }
-            
-            return listTWrapper.projectList
-        }
+    var projectArray: Array<ProjectX> = []
+    
+    init() {
+        let settings = db.settings
+        settings.areTimestampsInSnapshotsEnabled = true
+        db.settings = settings
     }
     
+    // Read Project
+    func loadData(completed: @escaping () -> ()){
+        db.collection("User/user1/Project").order(by: "order", descending: false).addSnapshotListener { querySnapshot, error in
+            guard let documents = querySnapshot?.documents else {
+                print("Error fetching documents: \(error!)")
+                return completed()
+            }
+            
+            self.projectArray = []
+            
+            for document in documents {
+                
+                let tempProj = ProjectX(projectID: document.documentID,
+                                       projectName: document.data()["projectName"] as! String,
+                                       order: document.data()["order"] as! Int)
+                print(tempProj.projectName)
+                self.projectArray.append(tempProj)
+            }
+            completed()
+        }
+    }
     // Add new Project
-    func addProject(projectList: List<Project>, projectName: String) {
+    func addProject(projectName: String) {
         
         if(!(projectName.isEmpty)) {
-            let tempProject = Project()
-            tempProject.projectName = projectName
+            // Add a new document with a generated ID
             
-            try! self.realm.write {
-                projectList.append(tempProject)
+            var ref: DocumentReference? = nil
+            ref = db.collection("User/user1/Project").addDocument(data: [
+                "projectName": projectName,
+                "order": self.projectArray.count + 1
+            ]) { err in
+                if let err = err {
+                    print("Error adding document: \(err)")
+                } else {
+                    print("Document added with ID: \(ref!.documentID)")
+                }
             }
         }
     }
     
     // reorder Project List
-    func reorder(projectList: List<Project>, sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {
-        try! realm.write {
-            let tempProject = projectList[sourceIndexPath.row]
-            projectList.remove(at: sourceIndexPath.row)
-            projectList.insert(tempProject, at: destinationIndexPath.row)
+    func reorder(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {
+        let sourceOrder = self.projectArray[sourceIndexPath.row].order
+        let destOrder = self.projectArray[destinationIndexPath.row].order
+        
+        db.collection("User/user1/Project").document(self.projectArray[sourceIndexPath.row].projectID).updateData([
+            "order": destOrder,
+        ]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
+        
+        db.collection("User/user1/Project").document(self.projectArray[destinationIndexPath.row].projectID).updateData([
+            "order": sourceOrder,
+            ]) { err in
+                if let err = err {
+                    print("Error updating document: \(err)")
+                } else {
+                    print("Document successfully updated")
+                }
         }
     }
+    
 }

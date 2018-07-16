@@ -131,7 +131,7 @@ extension LeftViewController: UITableViewDelegate, UITableViewDataSource {
         if(tableView.tag == 0) {
             return listData.count
         }else{
-            return leftModel.customListData.count
+            return leftModel.projectManager.projectArray.count
         }
     }
     
@@ -147,14 +147,14 @@ extension LeftViewController: UITableViewDelegate, UITableViewDataSource {
             cell = tableView.dequeueReusableCell(withIdentifier: "LSlideListCell", for: indexPath) as! SlideListCell
             
             // Configure the cell...
-            cell.textLabel?.text = "\(listData[indexPath.row])"
+            cell.textLabel?.text = listData[indexPath.row]
             cell.backgroundColor = UIColor.white
             
         }else{
             cell = tableView.dequeueReusableCell(withIdentifier: "LCustomSlideListCell", for: indexPath) as! SlideListCell
             
             // Configure the cell...
-            cell.textLabel?.text = "\(leftModel.customListData[indexPath.row].projectName)"
+            cell.textLabel?.text = leftModel.projectManager.projectArray[indexPath.row].projectName
             cell.backgroundColor = UIColor.white
         }
         
@@ -186,7 +186,7 @@ extension LeftViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 
             }else{
-                TaskListViewController.taskListModel.changeList(selectedProjcet: leftModel.customListData[indexPath.row])
+                //TaskListViewController.taskListModel.changeList(selectedProjcet: leftModel.customListData[indexPath.row])
             }
             slideMenuController.closeLeft()
         }
@@ -209,7 +209,7 @@ extension LeftViewController: UITableViewDragDelegate {
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
         // Get the Data
-        let item = leftModel.customListData[indexPath.row].projectName
+        let item = leftModel.projectManager.projectArray[indexPath.row].projectName
         let itemProvider = NSItemProvider()
         
         itemProvider.registerDataRepresentation(forTypeIdentifier: kUTTypePlainText as String, visibility: .all) { completion in

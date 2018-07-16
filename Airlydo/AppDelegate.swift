@@ -24,37 +24,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         
         // Google Firestore
         FirebaseApp.configure()
-        let db = Firestore.firestore()
+        //let db = Firestore.firestore()
         
         
         // Google Sign-in
         // Initialize sign-in
         //GIDSignIn.sharedInstance().clientID = "752419583646-pfbeb5skfj6h84tkmakdnq6berefieqt.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
-        GIDSignIn.sharedInstance().delegate = self
-        
-        if GIDSignIn.sharedInstance().hasAuthInKeychain() {
-            // Signed in
-            print("signIn")
-            GIDSignIn.sharedInstance().signInSilently()
-            
-            // Set initialView
-            self.window = UIWindow(frame: UIScreen.main.bounds)
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let initialViewController = storyboard.instantiateViewController(withIdentifier: "ContainerViewController")
-            self.window?.rootViewController = initialViewController
-            self.window?.makeKeyAndVisible()
-            
-        } else {
-            print("cant signIn")
-            
-            // Set initialView
-            self.window = UIWindow(frame: UIScreen.main.bounds)
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let initialViewController = storyboard.instantiateViewController(withIdentifier: "SignInViewController")
-            self.window?.rootViewController = initialViewController
-            self.window?.makeKeyAndVisible()
-        }
         
         // Notification / Reminder Setting
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests();
@@ -182,40 +158,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
     }
 
 }
-
-// Google Sign-in
-extension AppDelegate : GIDSignInDelegate {
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!,
-              withError error: Error!) {
-        if let error = error {
-            print("\(error.localizedDescription)")
-        } else {
-            print(user.profile.email)
-        }
-        
-        // Googleのトークンを渡し、Firebaseクレデンシャルを取得する。
-        guard let authentication = user.authentication else { return }
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                       accessToken: authentication.accessToken)
-        // Firebaseにログインする。
-        Auth.auth().signIn(with: credential) { (user, error) in
-            if let error = error {
-                // ...
-                return
-            }
-            // User is signed in
-
-        }
-    }
-    
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
-              withError error: Error!) {
-        // Perform any operations when the user disconnects from app here.
-        // ...
-    }
-
-}
-
 
 // Local Notification
 extension AppDelegate : UNUserNotificationCenterDelegate {

@@ -8,11 +8,21 @@
 
 import Foundation
 import RealmSwift
+import Firebase
 
 class TaskManager {
     
     // Get the default Realm
     lazy var realm = try! Realm()
+    
+    // Firebase
+    let db = Firestore.firestore()
+    
+    init() {
+        let settings = db.settings
+        settings.areTimestampsInSnapshotsEnabled = true
+        db.settings = settings
+    }
     
     
     // Read Data from InBox
@@ -74,6 +84,22 @@ class TaskManager {
         
         for remind in newRemindList.addRemList {
             theTask.remindList.append(remind)
+        }
+        
+        var ref: DocumentReference? = nil
+        ref = db.collection("User/user1/Project/nalSi0uviYQVdhco7ap7/Task").addDocument(data: [
+            "taskName": taskName,
+            "note": note,
+            "dueDate" : calendar.date(from: components)!,
+            "howRepeat": howRepeat,
+            "priority": priority,
+            "assign": assign as Any
+        ]) { err in
+            if let err = err {
+                print("Error adding document: \(err)")
+            } else {
+                print("Document added with ID: \(ref!.documentID)")
+            }
         }
         
         try! realm.write() {

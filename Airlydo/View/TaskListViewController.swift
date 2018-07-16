@@ -82,26 +82,6 @@ class TaskListViewController: UIViewController {
         taskListModel.delegate = self
         addLeftBarButtonWithImage(UIImage(named: "menu")!)
         
-        
-        // Add a new document with a generated ID
-
-        let db = Firestore.firestore()
-        let settings = db.settings
-        settings.areTimestampsInSnapshotsEnabled = true
-        db.settings = settings
-
-        var ref: DocumentReference? = nil
-        ref = db.collection("users").addDocument(data: [
-            "first": "Ada",
-            "last": "Lovelace",
-            "born": 1815
-        ]) { err in
-            if let err = err {
-                print("Error adding document: \(err)")
-            } else {
-                print("Document added with ID: \(ref!.documentID)")
-            }
-        }
 
     }
     
