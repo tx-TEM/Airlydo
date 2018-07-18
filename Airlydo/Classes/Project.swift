@@ -11,12 +11,10 @@
 class ProjectX {
     var projectID = ""
     var projectName = ""
-    var order: Int
     
-    init(projectID: String, projectName: String, order: Int) {
+    init(projectID: String, projectName: String) {
         self.projectID = projectID
         self.projectName = projectName
-        self.order = order
     }
 }
 

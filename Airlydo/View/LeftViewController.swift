@@ -131,7 +131,7 @@ extension LeftViewController: UITableViewDelegate, UITableViewDataSource {
         if(tableView.tag == 0) {
             return listData.count
         }else{
-            return leftModel.projectManager.projectArray.count
+            return leftModel.count()
         }
     }
     
@@ -154,7 +154,7 @@ extension LeftViewController: UITableViewDelegate, UITableViewDataSource {
             cell = tableView.dequeueReusableCell(withIdentifier: "LCustomSlideListCell", for: indexPath) as! SlideListCell
             
             // Configure the cell...
-            cell.textLabel?.text = leftModel.projectManager.projectArray[indexPath.row].projectName
+            cell.textLabel?.text = leftModel.get(index: indexPath.row)
             cell.backgroundColor = UIColor.white
         }
         
@@ -209,7 +209,7 @@ extension LeftViewController: UITableViewDragDelegate {
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
         // Get the Data
-        let item = leftModel.projectManager.projectArray[indexPath.row].projectName
+        let item = leftModel.get(index: indexPath.row)
         let itemProvider = NSItemProvider()
         
         itemProvider.registerDataRepresentation(forTypeIdentifier: kUTTypePlainText as String, visibility: .all) { completion in
