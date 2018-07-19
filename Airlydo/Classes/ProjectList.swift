@@ -73,8 +73,7 @@ class ProjectList {
     func addProject(projectName: String) {
         
         if(!(projectName.isEmpty)) {
-            // Add a new document with a generated ID
-            
+
             var ref: DocumentReference? = nil
             ref = db.collection("User/user1/Project").addDocument(data: [
                 "projectName": projectName,
@@ -105,6 +104,17 @@ class ProjectList {
     
     // reorder Project List
     func reorder(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {
+        let tempID = orderArray[sourceIndexPath.row]
+        orderArray.remove(at: sourceIndexPath.row)
+        orderArray.insert(tempID, at: destinationIndexPath.row)
+        
+        self.db.collection("User/user1/etc").document("order").setData([
+            "projectOrder": self.orderArray
+        ]) { err in
+            if let err = err {
+                print("Error writing document: \(err)")
+            }
+        }
         
     }
     
