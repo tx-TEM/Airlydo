@@ -34,12 +34,10 @@ class LeftModel {
     
     func addList(projectName: String) {
         projectList.addProject(projectName: projectName)
-        
         delegate?.listDidChange()
     }
     
     func get(index: Int) -> String {
-        print(projectList.get(index: index).projectName)
         return projectList.get(index: index).projectName
     }
     

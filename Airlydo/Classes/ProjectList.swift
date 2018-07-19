@@ -26,24 +26,26 @@ class ProjectList {
     // load Projects
     func loadData(completed: @escaping () -> ()){
         db.collection("User/user1/Project").addSnapshotListener { querySnapshot, error in
-            guard let documents = querySnapshot?.documents else {
-                print("Error fetching documents: \(error!)")
-                return completed()
+            guard let snapshot = querySnapshot else {
+                print("Error fetching snapshots: \(error!)")
+                return
             }
             
-            self.projectDic = [:]
-            print("loadProj")
-            
-            for document in documents {
-                
-                if let projName = document.data()["projectName"] {
-                    let tempProj = ProjectX(projectID: document.documentID, projectName: projName as! String)
-                    
-                    self.projectDic[document.documentID] = tempProj
-                    print(projName)
+            for diff in snapshot.documentChanges {
+                if (diff.type == .added || diff.type == .modified) {
+                    print("New or Modified: \(diff.document.data())")
+                    if let projName = diff.document.data()["projectName"] {
+                        let tempProj = ProjectX(projectID: diff.document.documentID,
+                                                projectName: projName as! String)
+                        
+                        self.projectDic[diff.document.documentID] = tempProj
+                    }
                 }
                 
-                
+                if (diff.type == .removed) {
+                    print("Removed: \(diff.document.data())")
+                    self.projectDic.removeValue(forKey: diff.document.documentID)
+                }
             }
             completed()
         }
@@ -57,12 +59,9 @@ class ProjectList {
                 return completed()
             }
             
-            print("loadOrder")
-            
             if let docData = document.data() {
                 if let order = docData["projectOrder"] {
                     self.orderArray = order as! [String]
-                    print("successful order")
                     print(self.orderArray)
                 }
             }
@@ -91,8 +90,6 @@ class ProjectList {
                         ]) { err in
                             if let err = err {
                                 print("Error writing document: \(err)")
-                            } else {
-                                print("Document successfully written!")
                             }
                         }
                     }
