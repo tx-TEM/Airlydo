@@ -25,10 +25,6 @@ class TaskDetailModel {
     var pageTitle = "Add Task"
     var isNewTask: Bool
     
-    // list for Form
-    var theProjectList : List<Project>!
-    var assignList : Results<Assign>!
-    
     
     // Delegate
     weak var delegate: TaskDetailModelDelegate?
@@ -37,66 +33,28 @@ class TaskDetailModel {
         theTask = Task()
         isNewTask = true
         self.pageTitle = "Add Task"
-        
-        // get list for Form
-        if let list = realm.objects(ProjectWrapper.self).first?.projectList {
-            theProjectList = list
-            
-        }else{
-            let projectWrapper = ProjectWrapper()
-            
-            try! realm.write {
-                realm.add(projectWrapper)
-            }
-            
-            theProjectList = projectWrapper.projectList
-        }
-        
-        assignList = realm.objects(Assign.self)
-        
     }
     
     init(task: Task) {
         theTask = task
         isNewTask = false
         self.pageTitle = "Edit Task"
-        
-        // get list for Form
-        if let list = realm.objects(ProjectWrapper.self).first?.projectList {
-            theProjectList = list
-            
-        }else{
-            let projectWrapper = ProjectWrapper()
-            
-            try! realm.write {
-                realm.add(projectWrapper)
-            }
-            
-            theProjectList = projectWrapper.projectList
-        }
-        
-        assignList = realm.objects(Assign.self)
-        
     }
     
     // create NewTask
     func newTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
-                 formPriority: String, formProject: Project?, formAssign: Assign?, formRemindList: [Date]) {
+                 formPriority: String, formProject: Project?) {
         
-        self.taskManager.addTask(taskName: formTaskName, note: formNote, dueDate: formDueDate,
-                                 howRepeat: self.howRepeatStringToInt(howRepeatText: formHowRepeat),
-                                 priority: self.priorityStringToInt(priorityText: formPriority),
-                                 project: formProject, assign: formAssign, remindList: formRemindList)
+        
+        
+        self.taskManager.addTask(task: self.theTask!)
     }
     
     // edit Task
     func editTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
-                  formPriority: String, formProject: Project?, formAssign: Assign?, formRemindList: [Date]) {
+                  formPriority: String, formProject: Project?) {
         
-        self.taskManager.editTask(theTask: self.theTask!, taskName: formTaskName, note: formNote, dueDate: formDueDate,
-                                  howRepeat: self.howRepeatStringToInt(howRepeatText: formHowRepeat),
-                                  priority: self.priorityStringToInt(priorityText: formPriority),
-                                  project: formProject, assign: formAssign, remindList: formRemindList)
+        self.taskManager.editTask(task: self.theTask!)
         
     }
     

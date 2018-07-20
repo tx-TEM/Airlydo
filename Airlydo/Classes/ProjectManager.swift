@@ -9,12 +9,12 @@
 import Foundation
 import Firebase
 
-class ProjectList {
+class ProjectManager {
     
     // Firebase
     let db = Firestore.firestore()
     
-    var projectDic = [String:ProjectX]()
+    var projectDic = [String:Project]()
     var orderArray = [String]()
     
     init() {
@@ -35,7 +35,7 @@ class ProjectList {
                 if (diff.type == .added || diff.type == .modified) {
                     print("New or Modified: \(diff.document.data())")
                     if let projName = diff.document.data()["projectName"] {
-                        let tempProj = ProjectX(projectID: diff.document.documentID,
+                        let tempProj = Project(projectID: diff.document.documentID,
                                                 projectName: projName as! String)
                         
                         self.projectDic[diff.document.documentID] = tempProj
@@ -98,7 +98,7 @@ class ProjectList {
         
     }
     
-    func get(index: Int) -> ProjectX {
+    func get(index: Int) -> Project {
         return projectDic[orderArray[index]]!
     }
     

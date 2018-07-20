@@ -7,17 +7,7 @@
 //
 
 import Foundation
-import RealmSwift
 
 class ReminderManager {
-    
-    // Get the default Realm
-    lazy var realm = try! Realm()
-    
-    // Read Data
-    func readData (minimumRemind: Date)-> Results<Reminder> {
-        let predicate = NSPredicate(format: "remDate > %@", minimumRemind as NSDate)
-        return self.realm.objects(Reminder.self).filter(predicate)
-    }
     
 }

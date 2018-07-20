@@ -18,9 +18,7 @@ class TaskDetailViewController: FormViewController {
     var taskDetailModel: TaskDetailModel?
     
     var recvVal: String = ""
-    
     var formProject: Project?
-    var formAssign: Assign?
     
     @IBAction func SaveTaskButtonTapped(_ sender: UIButton) {
         let valuesDictionary = form.values()

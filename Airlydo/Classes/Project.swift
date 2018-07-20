@@ -8,7 +8,7 @@
 
 
 // Project
-class ProjectX {
+class Project {
     var projectID = ""
     var projectName = ""
     

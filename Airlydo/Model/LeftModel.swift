@@ -16,37 +16,37 @@ protocol LeftModelDelegate: class {
 
 class LeftModel {
     
-    var projectList = ProjectList()
+    var projectManager = ProjectManager()
     
     // Delegate
     weak var delegate: LeftModelDelegate?
     
     init() {
-        projectList.loadData {
+        projectManager.loadData {
             self.delegate?.listDidChange()
         }
         
-        projectList.loadOrder {
+        projectManager.loadOrder {
             self.delegate?.listDidChange()
         }
     }
     
     
     func addList(projectName: String) {
-        projectList.addProject(projectName: projectName)
+        projectManager.addProject(projectName: projectName)
         delegate?.listDidChange()
     }
     
     func get(index: Int) -> String {
-        return projectList.get(index: index).projectName
+        return projectManager.get(index: index).projectName
     }
     
     func count() -> Int {
-        return projectList.orderArray.count
+        return projectManager.orderArray.count
     }
     
     func reorder(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {
-        projectList.reorder(sourceIndexPath: sourceIndexPath, destinationIndexPath: destinationIndexPath)
+        projectManager.reorder(sourceIndexPath: sourceIndexPath, destinationIndexPath: destinationIndexPath)
     }
     
     

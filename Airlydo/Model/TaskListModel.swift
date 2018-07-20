@@ -16,7 +16,6 @@ protocol TaskListModelDelegate: class {
 
 class TaskListModel {
     
-    var tasks: Results<Task>!
     var taskManager = TaskManager()
     
     // Page Status
@@ -37,10 +36,6 @@ class TaskListModel {
     weak var delegate: TaskListModelDelegate?
     
     init() {
-        print(Realm.Configuration.defaultConfiguration.fileURL!)
-        
-        // Get Data from Realm
-        self.tasks = taskManager.readAllData(isArchiveMode: isArchiveMode, sortProperties: sortProperties)
         
         // Date Formatter
         dateFormatter.locale = Locale.current
@@ -51,7 +46,7 @@ class TaskListModel {
     
     // Change Display Tasks
     func changeList() {
-        self.tasks = taskManager.readAllData(isArchiveMode: isArchiveMode, sortProperties: sortProperties)
+        //self.tasks = taskManager.readAllData(isArchiveMode: isArchiveMode, sortProperties: sortProperties)
         self.oldChangeFunc = 0
         self.pageTitle = isArchiveMode ? "All <Archive>" : "All"
         delegate?.tasksDidChange()
@@ -61,11 +56,11 @@ class TaskListModel {
     func changeList(selectedProjcet: Project?) {
         
         if let theSelectedProjcet = selectedProjcet {
-            self.tasks = taskManager.readData(isArchiveMode: isArchiveMode, project: theSelectedProjcet, sortProperties: sortProperties)
+            //self.tasks = taskManager.readData(isArchiveMode: isArchiveMode, project: theSelectedProjcet, sortProperties: sortProperties)
             self.pageTitle = isArchiveMode ? theSelectedProjcet.projectName + " <Archive>" : theSelectedProjcet.projectName
             
         }else{
-            self.tasks = taskManager.readData(isArchiveMode: isArchiveMode, sortProperties: sortProperties)
+            //self.tasks = taskManager.readData(isArchiveMode: isArchiveMode, sortProperties: sortProperties)
             self.pageTitle = isArchiveMode ? "InBox <Archive>" : "InBox"
         }
         
@@ -101,13 +96,13 @@ class TaskListModel {
     
     // Delete Task
     func deleteTask(indexPath: IndexPath) {
-        taskManager.deleteTask(task: tasks[indexPath.row])
+        taskManager.deleteTask(task: taskManager.get(index: indexPath.row))
         delegate?.tasksDidChange()
     }
     
     // Send the task to archive
     func archiveTask(indexPath: IndexPath) {
-        taskManager.archiveTask(task: tasks[indexPath.row])
+        taskManager.archiveTask(task: taskManager.get(index: indexPath.row))
         self.delegate?.tasksDidChange()
 
     }
@@ -136,22 +131,11 @@ class TaskListModel {
     
     // Generate Repeat Task
     func genRepeatask(indexPath: IndexPath) {
-        let task = tasks[indexPath.row]
-        let repeatTask = Task()
-        repeatTask.taskName = task.taskName
-        repeatTask.dueDate = calcRepeatTime(date: task.dueDate, howRepeat: task.howRepeat)
-        repeatTask.howRepeat = task.howRepeat
-        repeatTask.priority = task.priority
-        
-        // Create Reminder instance, and Add List
-        for reminder in task.remindList {
-            let tempReminder = Reminder()
-            tempReminder.remDate = calcRepeatTime(date: reminder.remDate, howRepeat: task.howRepeat)
-            repeatTask.remindList.append(tempReminder)
-        }
+        let repeatTask = taskManager.get(index: indexPath.row)
+        repeatTask.dueDate = calcRepeatTime(date: repeatTask.dueDate, howRepeat: repeatTask.howRepeat)
         
         // Add repeatTask
-        taskManager.addTask(task: repeatTask, project: task.project)
+        taskManager.addTask(task: repeatTask)
 
         self.delegate?.tasksDidChange()
     }
