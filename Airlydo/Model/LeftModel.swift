@@ -33,12 +33,16 @@ class LeftModel {
     
     
     func addList(projectName: String) {
-        projectManager.addProject(projectName: projectName)
+        projectManager.add(projectName: projectName)
         delegate?.listDidChange()
     }
     
     func get(index: Int) -> String {
         return projectManager.get(index: index).projectName
+    }
+    
+    func getArray() -> [Project] {
+        return projectManager.getArray()
     }
     
     func count() -> Int {

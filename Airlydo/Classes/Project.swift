@@ -9,8 +9,13 @@
 
 // Project
 class Project {
-    var projectID = ""
-    var projectName = ""
+    var projectID: String
+    var projectName: String
+    
+    init() {
+        self.projectID = ""
+        self.projectName = ""
+    }
     
     init(projectID: String, projectName: String) {
         self.projectID = projectID

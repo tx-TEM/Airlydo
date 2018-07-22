@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RealmSwift
 
 protocol TaskDetailModelDelegate: class {
     func listDidChange()
@@ -16,15 +15,13 @@ protocol TaskDetailModelDelegate: class {
 
 class TaskDetailModel {
     
-    // Get the default Realm
-    lazy var realm = try! Realm()
     var theTask: Task?
+    var projectList = [Project]()
     var taskManager = TaskManager()
     
     // Page Status
     var pageTitle = "Add Task"
     var isNewTask: Bool
-    
     
     // Delegate
     weak var delegate: TaskDetailModelDelegate?
@@ -35,8 +32,16 @@ class TaskDetailModel {
         self.pageTitle = "Add Task"
     }
     
-    init(task: Task) {
+    init(projects: [Project]) {
+        theTask = Task()
+        self.projectList = projects
+        isNewTask = true
+        self.pageTitle = "Add Task"
+    }
+    
+    init(task: Task, projects: [Project]) {
         theTask = task
+        self.projectList = projects
         isNewTask = false
         self.pageTitle = "Edit Task"
     }
@@ -45,9 +50,13 @@ class TaskDetailModel {
     func newTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
                  formPriority: String, formProject: Project?) {
         
-        
-        
-        self.taskManager.addTask(task: self.theTask!)
+        theTask?.taskName = formTaskName
+        theTask?.note = formNote
+        theTask?.dueDate = formDueDate
+        theTask?.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
+        theTask?.priority = priorityStringToInt(priorityText: formPriority)
+        theTask?.projectID = (formProject?.projectID)!
+        self.taskManager.add(task: self.theTask!)
     }
     
     // edit Task

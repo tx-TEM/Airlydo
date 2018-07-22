@@ -10,18 +10,26 @@ import Foundation
 
 // Task
 class Task{
-    var taskID = ""
-    var taskName = ""
-    var note = ""
-    var isArchive = false
-    var dueDate = Date()
-    var howRepeat = 3  //0:毎月, 1:毎週, 2:毎日, 3:なし
-    var priority = 1   //0:low, 1:middle, 2:high
+    var taskID: String
+    var taskName: String
+    var note: String
+    var isArchive: Bool
+    var dueDate: Date
+    var howRepeat: Int  //0:毎月, 1:毎週, 2:毎日, 3:なし
+    var priority: Int   //0:low, 1:middle, 2:high
     
     // Parent Project
-    var projectID: String?
+    var projectID = ""
     
     init() {
+        self.taskID = ""
+        self.taskName = ""
+        self.note = ""
+        self.isArchive = false
+        self.dueDate = Date()
+        self.howRepeat = 3
+        self.priority = 1
+        self.projectID = ""
     }
     
     init(taskID: String, taskName: String, note: String, isArchive: Bool,

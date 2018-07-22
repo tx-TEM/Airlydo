@@ -24,8 +24,12 @@ class TaskListViewController: UIViewController {
     let taskListModel = TaskListModel()
     
     @IBAction func addTaskButtonTapped(_ sender: UIButton) {
+
+        let leftViewController = self.slideMenuController()?.leftViewController as! LeftViewController
+        let projectArray = leftViewController.leftModel.getArray()
+        
         let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
-        TaskDetailViewController.taskDetailModel = TaskDetailModel() // Set new Task
+        TaskDetailViewController.taskDetailModel = TaskDetailModel(projects: projectArray) // Set new Task
         self.navigationController?.pushViewController(TaskDetailViewController, animated: true)
     }
     
@@ -81,7 +85,6 @@ class TaskListViewController: UIViewController {
         
         taskListModel.delegate = self
         addLeftBarButtonWithImage(UIImage(named: "menu")!)
-        
 
     }
     
@@ -118,7 +121,7 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return taskListModel.tasks.count
+        return taskListModel.count()
     }
     
     // return cell height (px)
@@ -130,17 +133,13 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "TaskPage_TaskCell", for: indexPath) as! TaskCell
         
-        let theTask = taskListModel.tasks[indexPath.row]
+        let theTask = taskListModel.get(index: indexPath.row)
         
         // Configure the cell...
         cell.TaskTitleLabel.text = theTask.taskName
         cell.TaskInfoLabel.text = theTask.note
-        if let assignName = theTask.assign?.assignName{
-            cell.AssignLabel.text = assignName
-        } else {
-            cell.AssignLabel.text = "自分"
-            
-        }
+    
+        cell.AssignLabel.text = "自分"
         
         cell.DateLabel.text = taskListModel.dueDateToString(dueDate: theTask.dueDate)
         
@@ -161,12 +160,12 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
             
             if let cell = cell, let indexPath = tableView.indexPath(for: cell) {
                 // Genarate Repeat Task
-                if(self?.taskListModel.tasks[indexPath.row].howRepeat != 3){
-                    self?.taskListModel.genRepeatask(indexPath: indexPath)
+                if(self?.taskListModel.get(index: indexPath.row).howRepeat != 3){
+                    self?.taskListModel.genRepeatask(index: indexPath.row)
                 }
                 
                 // Send the Task to Archive
-                self?.taskListModel.archiveTask(indexPath: indexPath)
+                self?.taskListModel.archiveTask(index: indexPath.row)
             }
             self?.TaskCellTable.reloadData()
         })
@@ -176,12 +175,12 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
             
             if let cell = cell, let indexPath = tableView.indexPath(for: cell) {
                 // Genarate Repeat Task
-                if(self?.taskListModel.tasks[indexPath.row].howRepeat != 3){
-                    self?.taskListModel.genRepeatask(indexPath: indexPath)
+                if(self?.taskListModel.get(index: indexPath.row).howRepeat != 3){
+                    self?.taskListModel.genRepeatask(index: indexPath.row)
                 }
                 
                 // Remove Task
-                self?.taskListModel.deleteTask(indexPath: indexPath)
+                self?.taskListModel.deleteTask(index: indexPath.row)
             }
         })
         
@@ -214,9 +213,12 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
         // deselect
         tableView.deselectRow(at: indexPath, animated: true)
         
+        let leftViewController = self.slideMenuController()?.leftViewController as! LeftViewController
+        let projectArray = leftViewController.leftModel.getArray()
+        
         // push view
         let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
-        TaskDetailViewController.taskDetailModel = TaskDetailModel(task: self.taskListModel.tasks[indexPath.row])
+        TaskDetailViewController.taskDetailModel = TaskDetailModel(task: taskListModel.get(index: indexPath.row), projects: projectArray)
         self.navigationController?.pushViewController(TaskDetailViewController, animated: true)
         
     }

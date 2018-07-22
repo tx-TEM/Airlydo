@@ -39,8 +39,7 @@ class TaskManager {
     
 
     // Add new Task
-    
-    func addTask(task: Task) {
+    func add(task: Task) {
         
         // dueDate -> 11:59:59
         let calendar = Calendar.current
@@ -49,13 +48,15 @@ class TaskManager {
         components.minute = 59
         components.second = 59
         
+        
         var ref: DocumentReference? = nil
-        ref = db.collection("User/user1/Project/" + task.projectID! + "/Task").addDocument(data: [
+        ref = db.collection("User/user1/Project/" + task.projectID + "/Task").addDocument(data: [
             "taskName": task.taskName,
             "note": task.note,
-            "dueDate" : calendar.date(from: components)!,
+            "dueDate": calendar.date(from: components)!,
             "howRepeat": task.howRepeat,
-            "priority": task.priority
+            "priority": task.priority,
+            "projectID": task.projectID
             
         ]) { err in
             if let err = err {

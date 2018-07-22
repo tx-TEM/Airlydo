@@ -1,6 +1,6 @@
 //
-//  ProjectList.swift
-//  ToDoList
+//  ProjectManager.swift
+//  Airlydo
 //
 //  Created by yoshiki-t on 2018/06/20.
 //  Copyright © 2018年 yoshiki-t. All rights reserved.
@@ -14,6 +14,7 @@ class ProjectManager {
     // Firebase
     let db = Firestore.firestore()
     
+    // data
     var projectDic = [String:Project]()
     var orderArray = [String]()
     
@@ -70,7 +71,7 @@ class ProjectManager {
     }
     
     // Add new Project, save to firestore
-    func addProject(projectName: String) {
+    func add(projectName: String) {
         
         if(!(projectName.isEmpty)) {
 
@@ -99,7 +100,21 @@ class ProjectManager {
     }
     
     func get(index: Int) -> Project {
-        return projectDic[orderArray[index]]!
+        if let theProject = projectDic[orderArray[index]] {
+            return theProject
+        }else{
+            return Project()
+        }
+    }
+    
+    func getArray() -> [Project] {
+        var reArray = [Project]()
+        
+        for order in orderArray {
+            reArray.append(projectDic[order]!)
+        }
+        
+        return reArray
     }
     
     // reorder Project List

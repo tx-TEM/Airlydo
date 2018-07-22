@@ -18,14 +18,12 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate  {
 
     var window: UIWindow?
-    var reminderManager = ReminderManager()
+    //var reminderManager = ReminderManager()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         // Google Firestore
         FirebaseApp.configure()
-        //let db = Firestore.firestore()
-        
         
         // Google Sign-in
         // Initialize sign-in
@@ -62,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         // Delete old Notification
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests();
         
+        /*
         let remindList = reminderManager.readData(minimumRemind: Date())
         
         let dateFormatter = DateFormatter()
@@ -85,9 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
             
             NotificationManager.setLocalNotification(identifier: reminder.remID, date: reminder.remDate, title: taskName, body: body)
         }
-        
-        // Test
-        //GIDSignIn.sharedInstance().signOut()
+        */
 
     }
 

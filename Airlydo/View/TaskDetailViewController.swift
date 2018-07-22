@@ -23,7 +23,6 @@ class TaskDetailViewController: FormViewController {
     @IBAction func SaveTaskButtonTapped(_ sender: UIButton) {
         let valuesDictionary = form.values()
         
-        
         // Reminder
         let formReminderTags = [String](valuesDictionary.keys).filter({$0.contains("ReminderTag_")}).sorted()
         var formRemindList: [Date] = []
@@ -38,9 +37,7 @@ class TaskDetailViewController: FormViewController {
                                      formDueDate: valuesDictionary["DueDateTag"] as! Date,
                                      formHowRepeat: valuesDictionary["RepeatTag"] as! String,
                                      formPriority: valuesDictionary["PriorityTag"] as! String,
-                                     formProject: formProject,
-                                     formAssign: formAssign,
-                                     formRemindList: formRemindList)
+                                     formProject: formProject)
             
         }else{
             taskDetailModel?.editTask(formTaskName: valuesDictionary["TitleTag"] as! String,
@@ -48,9 +45,7 @@ class TaskDetailViewController: FormViewController {
                                       formDueDate: valuesDictionary["DueDateTag"] as! Date,
                                       formHowRepeat: valuesDictionary["RepeatTag"] as! String,
                                       formPriority: valuesDictionary["PriorityTag"] as! String,
-                                      formProject: formProject,
-                                      formAssign: formAssign,
-                                      formRemindList: formRemindList)
+                                      formProject: formProject)
         }
         
         self.navigationController?.popViewController(animated: true)
@@ -86,11 +81,13 @@ class TaskDetailViewController: FormViewController {
             
             <<< LabelRow("ListTag"){
                 $0.title = "List"
+                /*
                 if let listName = taskDetailModel?.theTask?.project?.projectName {
                     $0.value = listName
                 }else{
                     $0.value = "InBox"
                 }
+                */
                 
                 }.onCellSelection{ cell, row in
                     
@@ -107,7 +104,8 @@ class TaskDetailViewController: FormViewController {
                         row.updateCell()
                     }))
                     
-                    if let projectList = self.taskDetailModel?.theProjectList {
+                    
+                    if let projectList = self.taskDetailModel?.projectList {
                         
                         for data in projectList {
                             controller.addAction(UIAlertAction(title: data.projectName, style: .default, handler: {
@@ -146,9 +144,6 @@ class TaskDetailViewController: FormViewController {
                 }else{
                     $0.value = repeatArray[3]
                 }
-                
-                }.onChange{row in
-                    print(row.value as Any)
         }
         
         
@@ -165,7 +160,7 @@ class TaskDetailViewController: FormViewController {
                                                 $0.title = ""
                                             }
                                         }
-                                        
+                                        /*
                                         if let remindList = self.taskDetailModel?.theTask?.remindList {
                                             for (index,data) in remindList.enumerated() {
                                                 $0 <<< DateTimeRow("ReminderTag_\(index+1)") {
@@ -174,6 +169,7 @@ class TaskDetailViewController: FormViewController {
                                                 }
                                             }
                                         }
+                                        */
         }
         
         form +++ Section("Option")
@@ -194,6 +190,7 @@ class TaskDetailViewController: FormViewController {
             
             <<< LabelRow("AssignTag"){
                 $0.title = "Assign"
+                /*
                 if let assignName = taskDetailModel?.theTask?.assign?.assignName {
                     $0.value = assignName
                 }else{
@@ -227,10 +224,11 @@ class TaskDetailViewController: FormViewController {
                             }))
                         }
                     }
-                    
+ 
                     controller.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
 
                     self.present(controller, animated: true, completion: nil)
+                    */
         }
         
     }

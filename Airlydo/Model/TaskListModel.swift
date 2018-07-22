@@ -95,14 +95,14 @@ class TaskListModel {
     }
     
     // Delete Task
-    func deleteTask(indexPath: IndexPath) {
-        taskManager.deleteTask(task: taskManager.get(index: indexPath.row))
+    func deleteTask(index: Int) {
+        taskManager.deleteTask(task: taskManager.get(index: index))
         delegate?.tasksDidChange()
     }
     
     // Send the task to archive
-    func archiveTask(indexPath: IndexPath) {
-        taskManager.archiveTask(task: taskManager.get(index: indexPath.row))
+    func archiveTask(index: Int) {
+        taskManager.archiveTask(task: taskManager.get(index: index))
         self.delegate?.tasksDidChange()
 
     }
@@ -130,13 +130,21 @@ class TaskListModel {
     }
     
     // Generate Repeat Task
-    func genRepeatask(indexPath: IndexPath) {
-        let repeatTask = taskManager.get(index: indexPath.row)
+    func genRepeatask(index: Int) {
+        let repeatTask = taskManager.get(index: index)
         repeatTask.dueDate = calcRepeatTime(date: repeatTask.dueDate, howRepeat: repeatTask.howRepeat)
         
         // Add repeatTask
-        taskManager.addTask(task: repeatTask)
+        taskManager.add(task: repeatTask)
 
         self.delegate?.tasksDidChange()
+    }
+    
+    func count() -> Int {
+        return taskManager.TaskList.count
+    }
+    
+    func get(index: Int) -> Task {
+        return taskManager.get(index: index)
     }
 }
