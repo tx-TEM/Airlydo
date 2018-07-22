@@ -20,17 +20,27 @@ class ReminderManager {
         db.settings = settings
     }
     
-    // get
-    func getData(parentTask: Task) {
+    // load Reminder from cloud
+    func loadData(parentTaskID: String ,completed: @escaping () -> ()) {
         
     }
     
-    func getAllData() {
-        
+    // get
+    func get(index: Int) -> Reminder {
+        return reminderList[index]
+    }
+    
+    func getAllData() -> [Reminder] {
+        return reminderList
     }
     
     // add
-    func add() {
+    func add(parentTask: Task) {
+        
+    }
+    
+    // delete
+    func delete(parentTask: Task, reminderID: String) {
         
     }
     

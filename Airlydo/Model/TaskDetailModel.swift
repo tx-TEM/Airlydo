@@ -63,7 +63,7 @@ class TaskDetailModel {
     func editTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
                   formPriority: String, formProject: Project?) {
         
-        self.taskManager.editTask(task: self.theTask!)
+        self.taskManager.edit(task: self.theTask!)
         
     }
     

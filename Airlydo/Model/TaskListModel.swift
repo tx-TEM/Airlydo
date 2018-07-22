@@ -96,13 +96,13 @@ class TaskListModel {
     
     // Delete Task
     func deleteTask(index: Int) {
-        taskManager.deleteTask(task: taskManager.get(index: index))
+        taskManager.delete(task: taskManager.get(index: index))
         delegate?.tasksDidChange()
     }
     
     // Send the task to archive
     func archiveTask(index: Int) {
-        taskManager.archiveTask(task: taskManager.get(index: index))
+        taskManager.archive(task: taskManager.get(index: index))
         self.delegate?.tasksDidChange()
 
     }

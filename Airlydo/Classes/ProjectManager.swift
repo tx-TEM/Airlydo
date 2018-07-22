@@ -24,7 +24,7 @@ class ProjectManager {
         db.settings = settings
     }
     
-    // load Projects
+    // load Projects from cloud
     func loadData(completed: @escaping () -> ()){
         db.collection("User/user1/Project").addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {

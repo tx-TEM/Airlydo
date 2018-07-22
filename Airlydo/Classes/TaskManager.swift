@@ -68,17 +68,39 @@ class TaskManager {
     }
     
     // edit Task
-    func editTask(task: Task) {
-
+    func edit(task: Task) {
+        
+        // dueDate -> 11:59:59
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: task.dueDate)
+        components.hour = 11
+        components.minute = 59
+        components.second = 59
+        
+        db.collection("User/user1/Project/" + task.projectID + "/Task").document(task.taskID).setData([
+            "taskName": task.taskName,
+            "note": task.note,
+            "dueDate": calendar.date(from: components)!,
+            "howRepeat": task.howRepeat,
+            "priority": task.priority,
+            "projectID": task.projectID
+            
+        ]) { err in
+            if let err = err {
+                print("Error adding document: \(err)")
+            } else {
+                print("Document Modified with ID: \(task.taskID)")
+            }
+        }
     }
     
     // Delete Task
-    func deleteTask(task: Task) {
+    func delete(task: Task) {
 
     }
     
     // Send the task to archive
-    func archiveTask(task: Task) {
+    func archive(task: Task) {
 
     }
     
