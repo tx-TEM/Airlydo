@@ -17,61 +17,49 @@ class TaskDetailModel {
     
     var theTask: Task?
     var projectList = [Project]()
-    var taskManager = TaskManager()
     var reminderManager = ReminderManager()
     
     // Page Status
     var pageTitle = "Add Task"
-    var isNewTask: Bool
     
     // Delegate
     weak var delegate: TaskDetailModelDelegate?
     
     init() {
         theTask = Task()
-        isNewTask = true
         self.pageTitle = "Add Task"
     }
     
     init(projects: [Project]) {
         theTask = Task()
         self.projectList = projects
-        isNewTask = true
         self.pageTitle = "Add Task"
     }
     
     init(task: Task, projects: [Project]) {
-        theTask = task
+        theTask = task  //document ID has been setted
         self.projectList = projects
-        isNewTask = false
         self.pageTitle = "Edit Task"
     }
     
-    // create NewTask
-    func newTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
+    // save
+    func saveTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
                  formPriority: String, formProject: Project?) {
         
-        theTask?.taskName = formTaskName
-        theTask?.note = formNote
-        theTask?.dueDate = formDueDate
-        theTask?.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
-        theTask?.priority = priorityStringToInt(priorityText: formPriority)
-        theTask?.projectID = (formProject?.projectID)!
-        self.taskManager.add(task: self.theTask!)
-    }
-    
-    // edit Task
-    func editTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
-                  formPriority: String, formProject: Project?) {
+        // dueDate -> 11:59:59
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: formDueDate)
+        components.hour = 11
+        components.minute = 59
+        components.second = 59
         
         theTask?.taskName = formTaskName
         theTask?.note = formNote
-        theTask?.dueDate = formDueDate
+        theTask?.dueDate = calendar.date(from: components)!
         theTask?.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
         theTask?.priority = priorityStringToInt(priorityText: formPriority)
         theTask?.projectID = (formProject?.projectID)!
-        self.taskManager.edit(task: self.theTask!)
-        
+        theTask?.saveData()
     }
     
     

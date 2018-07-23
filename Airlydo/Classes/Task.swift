@@ -6,7 +6,7 @@
 //  Copyright © 2018年 yoshiki-t. All rights reserved.
 //
 
-import Foundation
+import Firebase
 
 // Task
 class Task{
@@ -21,6 +21,17 @@ class Task{
     // Parent Project
     var projectID = ""
     
+    // getter for save data
+    var dictionary: [String: Any] {
+        return ["taskName": taskName,
+                "note": note,
+                "isArchive": isArchive,
+                "dueDate": dueDate,
+                "howRepeat": howRepeat,
+                "priority": priority,
+                "projectID": projectID]
+    }
+    
     init() {
         self.taskID = ""
         self.taskName = ""
@@ -33,7 +44,7 @@ class Task{
     }
     
     init(taskID: String, taskName: String, note: String, isArchive: Bool,
-        dueDate: Date, howRepeat: Int, priority: Int, projectID: String) {
+         dueDate: Date, howRepeat: Int, priority: Int, projectID: String) {
         
         self.taskID = taskID
         self.taskName = taskName
@@ -59,4 +70,46 @@ class Task{
                   dueDate: dueDate, howRepeat: howRepeat, priority: priority, projectID: projectID)
     }
     
+    func saveData() {
+        // Firebase
+        let db = Firestore.firestore()
+        let settings = db.settings
+        settings.areTimestampsInSnapshotsEnabled = true
+        db.settings = settings
+        
+        let dataToSave = dictionary
+        
+        if taskID != "" {  //update Data
+            db.collection("User/user1/Project/" + projectID + "/Task").document(taskID).setData(dataToSave) { err in
+                if let err = err {
+                    print("Error adding document: \(err)")
+                } else {
+                    print("Document Modified with ID: \(self.taskID)")
+                }
+            }
+            
+        } else {
+            var ref: DocumentReference? = nil
+            ref = db.collection("User/user1/Project/" + projectID + "Task").addDocument(data: dataToSave) { err in
+                if let err = err {
+                    print("Error writing document: \(err)")
+                } else {
+                    print("Document added with ID: \(ref!.documentID)")
+                    self.taskID = ref!.documentID
+                }
+            }
+        }
+        
+    }
+    
+    // Delete Task
+    func delete() {
+        
+    }
+    
+    // Send the task to archive
+    func archive() {
+        
+    }
+        
 }

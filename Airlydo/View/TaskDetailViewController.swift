@@ -31,22 +31,15 @@ class TaskDetailViewController: FormViewController {
             formRemindList.append(valuesDictionary[remTag] as! Date)
         }
         
-        if(taskDetailModel?.isNewTask)! {
-            taskDetailModel?.newTask(formTaskName: valuesDictionary["TitleTag"] as! String,
-                                     formNote: valuesDictionary["NoteTag"] as! String,
-                                     formDueDate: valuesDictionary["DueDateTag"] as! Date,
-                                     formHowRepeat: valuesDictionary["RepeatTag"] as! String,
-                                     formPriority: valuesDictionary["PriorityTag"] as! String,
-                                     formProject: formProject)
-            
-        }else{
-            taskDetailModel?.editTask(formTaskName: valuesDictionary["TitleTag"] as! String,
-                                      formNote: valuesDictionary["NoteTag"] as! String,
-                                      formDueDate: valuesDictionary["DueDateTag"] as! Date,
-                                      formHowRepeat: valuesDictionary["RepeatTag"] as! String,
-                                      formPriority: valuesDictionary["PriorityTag"] as! String,
-                                      formProject: formProject)
-        }
+        
+        taskDetailModel?.saveTask(formTaskName: valuesDictionary["TitleTag"] as! String,
+                                  formNote: valuesDictionary["NoteTag"] as! String,
+                                  formDueDate: valuesDictionary["DueDateTag"] as! Date,
+                                  formHowRepeat: valuesDictionary["RepeatTag"] as! String,
+                                  formPriority: valuesDictionary["PriorityTag"] as! String,
+                                  formProject: formProject)
+        
+        
         
         self.navigationController?.popViewController(animated: true)
     }
@@ -82,12 +75,12 @@ class TaskDetailViewController: FormViewController {
             <<< LabelRow("ListTag"){
                 $0.title = "List"
                 /*
-                if let listName = taskDetailModel?.theTask?.project?.projectName {
-                    $0.value = listName
-                }else{
-                    $0.value = "InBox"
-                }
-                */
+                 if let listName = taskDetailModel?.theTask?.project?.projectName {
+                 $0.value = listName
+                 }else{
+                 $0.value = "InBox"
+                 }
+                 */
                 
                 }.onCellSelection{ cell, row in
                     
@@ -161,15 +154,15 @@ class TaskDetailViewController: FormViewController {
                                             }
                                         }
                                         /*
-                                        if let remindList = self.taskDetailModel?.theTask?.remindList {
-                                            for (index,data) in remindList.enumerated() {
-                                                $0 <<< DateTimeRow("ReminderTag_\(index+1)") {
-                                                    $0.title = ""
-                                                    $0.value = data.remDate
-                                                }
-                                            }
-                                        }
-                                        */
+                                         if let remindList = self.taskDetailModel?.theTask?.remindList {
+                                         for (index,data) in remindList.enumerated() {
+                                         $0 <<< DateTimeRow("ReminderTag_\(index+1)") {
+                                         $0.title = ""
+                                         $0.value = data.remDate
+                                         }
+                                         }
+                                         }
+                                         */
         }
         
         form +++ Section("Option")
@@ -191,44 +184,44 @@ class TaskDetailViewController: FormViewController {
             <<< LabelRow("AssignTag"){
                 $0.title = "Assign"
                 /*
-                if let assignName = taskDetailModel?.theTask?.assign?.assignName {
-                    $0.value = assignName
-                }else{
-                    $0.value = "自分"
-                }
-                
-                }.onCellSelection{ cell, row in
-                    
-                    let controller = UIAlertController(title: "Assign",
-                                                       message: nil,
-                                                       preferredStyle: .actionSheet)
-                    
-                    // Add Button
-                    controller.addAction(UIAlertAction(title: "自分", style: .default, handler:{
-                        (action: UIAlertAction!) -> Void in
-                        row.value = action.title!
-                        self.formAssign = nil
-                        row.updateCell()
-                    }))
-                    
-                    if let assignList = self.taskDetailModel?.assignList {
-                        
-                        for data in assignList{
-                            controller.addAction(UIAlertAction(title: data.assignName, style: .default, handler: {
-                                (action: UIAlertAction!) -> Void in
-                                
-                                row.value = action.title!
-                                self.formAssign = data
-                                row.updateCell()
-                                
-                            }))
-                        }
-                    }
- 
-                    controller.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
-
-                    self.present(controller, animated: true, completion: nil)
-                    */
+                 if let assignName = taskDetailModel?.theTask?.assign?.assignName {
+                 $0.value = assignName
+                 }else{
+                 $0.value = "自分"
+                 }
+                 
+                 }.onCellSelection{ cell, row in
+                 
+                 let controller = UIAlertController(title: "Assign",
+                 message: nil,
+                 preferredStyle: .actionSheet)
+                 
+                 // Add Button
+                 controller.addAction(UIAlertAction(title: "自分", style: .default, handler:{
+                 (action: UIAlertAction!) -> Void in
+                 row.value = action.title!
+                 self.formAssign = nil
+                 row.updateCell()
+                 }))
+                 
+                 if let assignList = self.taskDetailModel?.assignList {
+                 
+                 for data in assignList{
+                 controller.addAction(UIAlertAction(title: data.assignName, style: .default, handler: {
+                 (action: UIAlertAction!) -> Void in
+                 
+                 row.value = action.title!
+                 self.formAssign = data
+                 row.updateCell()
+                 
+                 }))
+                 }
+                 }
+                 
+                 controller.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
+                 
+                 self.present(controller, animated: true, completion: nil)
+                 */
         }
         
     }
