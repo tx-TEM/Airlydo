@@ -18,6 +18,7 @@ class TaskDetailModel {
     var theTask: Task?
     var projectList = [Project]()
     var taskManager = TaskManager()
+    var reminderManager = ReminderManager()
     
     // Page Status
     var pageTitle = "Add Task"
@@ -63,6 +64,12 @@ class TaskDetailModel {
     func editTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
                   formPriority: String, formProject: Project?) {
         
+        theTask?.taskName = formTaskName
+        theTask?.note = formNote
+        theTask?.dueDate = formDueDate
+        theTask?.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
+        theTask?.priority = priorityStringToInt(priorityText: formPriority)
+        theTask?.projectID = (formProject?.projectID)!
         self.taskManager.edit(task: self.theTask!)
         
     }

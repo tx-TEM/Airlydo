@@ -35,12 +35,8 @@ class ProjectManager {
             for diff in snapshot.documentChanges {
                 if (diff.type == .added || diff.type == .modified) {
                     print("New or Modified: \(diff.document.data())")
-                    if let projName = diff.document.data()["projectName"] {
-                        let tempProj = Project(projectID: diff.document.documentID,
-                                                projectName: projName as! String)
-                        
-                        self.projectDic[diff.document.documentID] = tempProj
-                    }
+                    let tempProj = Project(dictionary: diff.document.data(), projectID: diff.document.documentID)
+                    self.projectDic[diff.document.documentID] = tempProj
                 }
                 
                 if (diff.type == .removed) {

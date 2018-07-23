@@ -21,5 +21,11 @@ class Project {
         self.projectID = projectID
         self.projectName = projectName
     }
+    
+    // For firestore
+    convenience init(dictionary: [String: Any], projectID: String) {
+        let projectName = dictionary["projectName"] as! String? ?? ""
+        self.init(projectID: projectID, projectName: projectName)
+    }
 }
 

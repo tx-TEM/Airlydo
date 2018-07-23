@@ -45,4 +45,18 @@ class Task{
         self.projectID = projectID
     }
     
+    // For firestore
+    convenience init(dictionary: [String: Any], taskID: String) {
+        let taskName = dictionary["taskName"] as! String? ?? ""
+        let note = dictionary["note"] as! String? ?? ""
+        let isArchive = dictionary["isArchive"] as! Bool? ?? false
+        let dueDate = dictionary["dueDate"] as! Date? ?? Date()
+        let howRepeat = dictionary["howRepeat"] as! Int? ?? 3
+        let priority = dictionary["priority"] as! Int? ?? 1
+        let projectID = dictionary["projectID"] as! String? ?? "InBox"
+        
+        self.init(taskID: taskID, taskName: taskName, note: note, isArchive: isArchive,
+                  dueDate: dueDate, howRepeat: howRepeat, priority: priority, projectID: projectID)
+    }
+    
 }
