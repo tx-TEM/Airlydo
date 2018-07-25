@@ -135,7 +135,11 @@ class TaskListModel {
         repeatTask.dueDate = calcRepeatTime(date: repeatTask.dueDate, howRepeat: repeatTask.howRepeat)
         
         // save repeatTask
-        repeatTask.saveData()
+        repeatTask.saveData() { success in
+            if(success) {
+                print("complete")
+            }
+        }
 
         //self.delegate?.tasksDidChange()
     }

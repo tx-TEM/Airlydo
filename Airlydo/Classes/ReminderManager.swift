@@ -22,7 +22,7 @@ class ReminderManager {
     
     // load Reminder from cloud
     func loadData(parentTask: Task ,completed: @escaping () -> ()) {
-        db.collection("User/user1/Project/" + parentTask.projectID + "/Task" + parentTask.taskID).getDocuments() { (querySnapshot, err) in
+        db.collection(parentTask.projectPath + "/Task" + parentTask.taskID).getDocuments() { (querySnapshot, err) in
             if let err = err {
                 print("Error getting documents: \(err)")
             } else {

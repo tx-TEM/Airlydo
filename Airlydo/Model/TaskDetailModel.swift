@@ -58,8 +58,12 @@ class TaskDetailModel {
         theTask?.dueDate = calendar.date(from: components)!
         theTask?.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
         theTask?.priority = priorityStringToInt(priorityText: formPriority)
-        theTask?.projectID = (formProject?.projectID)!
-        theTask?.saveData()
+        theTask?.projectPath = "User/user1/Project/" + (formProject?.projectID)!
+        theTask?.saveData() { success in
+            if(success){
+                print("complete")
+            }
+        }
     }
     
     

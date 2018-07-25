@@ -27,9 +27,9 @@ class TaskDetailViewController: FormViewController {
         let formReminderTags = [String](valuesDictionary.keys).filter({$0.contains("ReminderTag_")}).sorted()
         var formRemindList: [Date] = []
         
-        for remTag in formReminderTags{
-            formRemindList.append(valuesDictionary[remTag] as! Date)
-        }
+        //for remTag in formReminderTags{
+        //    formRemindList.append(valuesDictionary[remTag] as! Date)
+        //}
         
         
         taskDetailModel?.saveTask(formTaskName: valuesDictionary["TitleTag"] as! String,

@@ -19,7 +19,7 @@ class Task{
     var priority: Int   //0:low, 1:middle, 2:high
     
     // Parent Project
-    var projectID = ""
+    var projectPath: String
     
     // getter for save data
     var dictionary: [String: Any] {
@@ -29,7 +29,7 @@ class Task{
                 "dueDate": dueDate,
                 "howRepeat": howRepeat,
                 "priority": priority,
-                "projectID": projectID]
+                "projectPath": projectPath]
     }
     
     init() {
@@ -40,11 +40,11 @@ class Task{
         self.dueDate = Date()
         self.howRepeat = 3
         self.priority = 1
-        self.projectID = ""
+        self.projectPath = "InBox"
     }
     
     init(taskID: String, taskName: String, note: String, isArchive: Bool,
-         dueDate: Date, howRepeat: Int, priority: Int, projectID: String) {
+         dueDate: Date, howRepeat: Int, priority: Int, projectPath: String) {
         
         self.taskID = taskID
         self.taskName = taskName
@@ -53,7 +53,7 @@ class Task{
         self.dueDate = dueDate
         self.howRepeat = howRepeat
         self.priority = priority
-        self.projectID = projectID
+        self.projectPath = projectPath
     }
     
     // For firestore
@@ -64,13 +64,13 @@ class Task{
         let dueDate = dictionary["dueDate"] as! Date? ?? Date()
         let howRepeat = dictionary["howRepeat"] as! Int? ?? 3
         let priority = dictionary["priority"] as! Int? ?? 1
-        let projectID = dictionary["projectID"] as! String? ?? "InBox"
+        let projectPath = dictionary["projectPath"] as! String? ?? "User/user1/Project/InBox"
         
         self.init(taskID: taskID, taskName: taskName, note: note, isArchive: isArchive,
-                  dueDate: dueDate, howRepeat: howRepeat, priority: priority, projectID: projectID)
+                  dueDate: dueDate, howRepeat: howRepeat, priority: priority, projectPath: projectPath)
     }
     
-    func saveData() {
+    func saveData(completed: @escaping (Bool) -> ()) {
         // Firebase
         let db = Firestore.firestore()
         let settings = db.settings
@@ -80,22 +80,26 @@ class Task{
         let dataToSave = dictionary
         
         if taskID != "" {  //update Data
-            db.collection("User/user1/Project/" + projectID + "/Task").document(taskID).setData(dataToSave) { err in
+            db.collection(self.projectPath + "/Task").document(taskID).setData(dataToSave) { err in
                 if let err = err {
                     print("Error adding document: \(err)")
+                    completed(false)
                 } else {
                     print("Document Modified with ID: \(self.taskID)")
+                    completed(true)
                 }
             }
             
         } else {
             var ref: DocumentReference? = nil
-            ref = db.collection("User/user1/Project/" + projectID + "Task").addDocument(data: dataToSave) { err in
+            ref = db.collection(self.projectPath + "/Task").addDocument(data: dataToSave) { err in
                 if let err = err {
                     print("Error writing document: \(err)")
+                    completed(false)
                 } else {
                     print("Document added with ID: \(ref!.documentID)")
                     self.taskID = ref!.documentID
+                    completed(true)
                 }
             }
         }
