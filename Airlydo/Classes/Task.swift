@@ -28,8 +28,7 @@ class Task{
                 "isArchive": isArchive,
                 "dueDate": dueDate,
                 "howRepeat": howRepeat,
-                "priority": priority,
-                "projectPath": projectPath]
+                "priority": priority]
     }
     
     init() {
@@ -40,7 +39,7 @@ class Task{
         self.dueDate = Date()
         self.howRepeat = 3
         self.priority = 1
-        self.projectPath = "InBox"
+        self.projectPath = "/User/user1/DefaultProject/InBox"
     }
     
     init(taskID: String, taskName: String, note: String, isArchive: Bool,
@@ -57,14 +56,16 @@ class Task{
     }
     
     // For firestore
-    convenience init(dictionary: [String: Any], taskID: String) {
+    convenience init(dictionary: [String: Any], taskID: String, projectPath: String) {
         let taskName = dictionary["taskName"] as! String? ?? ""
         let note = dictionary["note"] as! String? ?? ""
         let isArchive = dictionary["isArchive"] as! Bool? ?? false
-        let dueDate = dictionary["dueDate"] as! Date? ?? Date()
+        
+        let dueDateTimeStamp = dictionary["dueDate"] as! Timestamp? ?? Timestamp(date: Date())
+        let dueDate = dueDateTimeStamp.dateValue()
+        
         let howRepeat = dictionary["howRepeat"] as! Int? ?? 3
         let priority = dictionary["priority"] as! Int? ?? 1
-        let projectPath = dictionary["projectPath"] as! String? ?? "User/user1/Project/InBox"
         
         self.init(taskID: taskID, taskName: taskName, note: note, isArchive: isArchive,
                   dueDate: dueDate, howRepeat: howRepeat, priority: priority, projectPath: projectPath)

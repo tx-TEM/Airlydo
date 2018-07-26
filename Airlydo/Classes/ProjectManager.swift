@@ -18,6 +18,9 @@ class ProjectManager {
     var projectDic = [String:Project]()
     var orderArray = [String]()
     
+    // DirPath
+    let customProjectPath = "/User/userID/CustomProject"
+    
     init() {
         let settings = db.settings
         settings.areTimestampsInSnapshotsEnabled = true
@@ -25,8 +28,14 @@ class ProjectManager {
     }
     
     // load Projects from cloud
+    //  /User/userID/DefaultProject : DefaultProject
+    //  /User/userID/CustomProject        : CustomProject
+    //  /User/UserID/SharedProject        : SharedProject
+    
     func loadData(completed: @escaping () -> ()){
-        db.collection("User/user1/Project").addSnapshotListener { querySnapshot, error in
+        
+        // load CustomProject
+        db.collection(customProjectPath).addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
                 print("Error fetching snapshots: \(error!)")
                 return
@@ -35,7 +44,9 @@ class ProjectManager {
             for diff in snapshot.documentChanges {
                 if (diff.type == .added || diff.type == .modified) {
                     print("New or Modified: \(diff.document.data())")
-                    let tempProj = Project(dictionary: diff.document.data(), projectID: diff.document.documentID)
+                    let tempProj = Project(dictionary: diff.document.data(), projectID: diff.document.documentID,
+                                           projectDirPath: self.customProjectPath)
+                    
                     self.projectDic[diff.document.documentID] = tempProj
                 }
                 
@@ -66,13 +77,13 @@ class ProjectManager {
         }
     }
     
-    // Add new Project, save to firestore
+    // Add new CustomProject, save to firestore
     func add(projectName: String) {
         
         if(!(projectName.isEmpty)) {
 
             var ref: DocumentReference? = nil
-            ref = db.collection("User/user1/Project").addDocument(data: [
+            ref = db.collection(self.customProjectPath).addDocument(data: [
                 "projectName": projectName,
                 ]) { err in
                     if let err = err {

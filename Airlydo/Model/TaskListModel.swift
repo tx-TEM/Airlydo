@@ -36,6 +36,9 @@ class TaskListModel {
     weak var delegate: TaskListModelDelegate?
     
     init() {
+        taskManager.loadData(isArchiveMode: isArchiveMode, projectPath: "User/user1/DefaultProject/InBox", completed: {
+            self.delegate?.tasksDidChange()
+        })
         
         // Date Formatter
         dateFormatter.locale = Locale.current
@@ -59,9 +62,6 @@ class TaskListModel {
             //self.tasks = taskManager.readData(isArchiveMode: isArchiveMode, project: theSelectedProjcet, sortProperties: sortProperties)
             self.pageTitle = isArchiveMode ? theSelectedProjcet.projectName + " <Archive>" : theSelectedProjcet.projectName
             
-        }else{
-            //self.tasks = taskManager.readData(isArchiveMode: isArchiveMode, sortProperties: sortProperties)
-            self.pageTitle = isArchiveMode ? "InBox <Archive>" : "InBox"
         }
         
         self.oldChangeFunc = 1
@@ -145,7 +145,7 @@ class TaskListModel {
     }
     
     func count() -> Int {
-        return taskManager.TaskList.count
+        return taskManager.taskList.count
     }
     
     func get(index: Int) -> Task {

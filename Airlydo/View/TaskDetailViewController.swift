@@ -18,7 +18,7 @@ class TaskDetailViewController: FormViewController {
     var taskDetailModel: TaskDetailModel?
     
     var recvVal: String = ""
-    var formProject: Project?
+    var formProjectPath: String = "/User/user1/DefaultProject/InBox"
     
     @IBAction func SaveTaskButtonTapped(_ sender: UIButton) {
         let valuesDictionary = form.values()
@@ -37,7 +37,7 @@ class TaskDetailViewController: FormViewController {
                                   formDueDate: valuesDictionary["DueDateTag"] as! Date,
                                   formHowRepeat: valuesDictionary["RepeatTag"] as! String,
                                   formPriority: valuesDictionary["PriorityTag"] as! String,
-                                  formProject: formProject)
+                                  formProjectPath: formProjectPath)
         
         
         
@@ -72,15 +72,17 @@ class TaskDetailViewController: FormViewController {
                     self.navigationController?.pushViewController(SetNotePageController, animated: true)
             }
             
-            <<< LabelRow("ListTag"){
-                $0.title = "List"
-                /*
-                 if let listName = taskDetailModel?.theTask?.project?.projectName {
-                 $0.value = listName
-                 }else{
-                 $0.value = "InBox"
-                 }
-                 */
+            <<< LabelRow("ProjectTag"){
+                $0.title = "Project"
+                
+                if let projectPath = taskDetailModel?.theTask?.projectPath {
+                    $0.value = projectPath
+                    formProjectPath = taskDetailModel?.theTask?.projectPath ?? "/User/user1/DefaultProject/InBox"
+                }else{
+                    $0.value = "InBox"
+                    formProjectPath = "/User/user1/DefaultProject/InBox"
+                }
+ 
                 
                 }.onCellSelection{ cell, row in
                     
@@ -91,9 +93,8 @@ class TaskDetailViewController: FormViewController {
                     // Add Action
                     controller.addAction(UIAlertAction(title: "InBox", style: .default, handler:{
                         (action: UIAlertAction!) -> Void in
-                        print("inBox")
                         row.value = action.title!
-                        self.formProject = nil
+                        self.formProjectPath = "/User/user1/DefaultProject/InBox"
                         row.updateCell()
                     }))
                     
@@ -105,7 +106,7 @@ class TaskDetailViewController: FormViewController {
                                 (action: UIAlertAction!) -> Void in
                                 
                                 row.value = action.title!
-                                self.formProject = data
+                                self.formProjectPath = data.projectDirPath + "/" + data.projectID
                                 row.updateCell()
                                 
                             }))
@@ -177,8 +178,6 @@ class TaskDetailViewController: FormViewController {
                 }else{
                     $0.value = priorityArray[1]
                 }
-                }.onChange{row in
-                    print(row.value as Any)
             }
             
             <<< LabelRow("AssignTag"){

@@ -44,7 +44,7 @@ class TaskDetailModel {
     
     // save
     func saveTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
-                 formPriority: String, formProject: Project?) {
+                 formPriority: String, formProjectPath: String) {
         
         // dueDate -> 11:59:59
         let calendar = Calendar.current
@@ -58,7 +58,8 @@ class TaskDetailModel {
         theTask?.dueDate = calendar.date(from: components)!
         theTask?.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
         theTask?.priority = priorityStringToInt(priorityText: formPriority)
-        theTask?.projectPath = "User/user1/Project/" + (formProject?.projectID)!
+        theTask?.projectPath = formProjectPath
+        
         theTask?.saveData() { success in
             if(success){
                 print("complete")

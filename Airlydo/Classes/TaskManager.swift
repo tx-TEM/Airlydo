@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RealmSwift
 import Firebase
 
 class TaskManager {
@@ -15,7 +14,7 @@ class TaskManager {
     // Firebase
     let db = Firestore.firestore()
     
-    var TaskList = [Task]()
+    var taskList = [Task]()
     
     init() {
         let settings = db.settings
@@ -23,9 +22,29 @@ class TaskManager {
         db.settings = settings
     }
     
-    // load Data from Project
-    func loadData (isArchiveMode: Bool, projectID: String) {
-       
+    
+    // load Tasks from cloud
+    func loadData(isArchiveMode: Bool, projectPath: String, completed: @escaping () -> ()){
+        db.collection(projectPath + "/Task").addSnapshotListener { querySnapshot, error in
+            guard let snapshot = querySnapshot else {
+                print("Error fetching snapshots: \(error!)")
+                return
+            }
+            
+            for diff in snapshot.documentChanges {
+                if (diff.type == .added || diff.type == .modified) {
+                    print("New or Modified: \(diff.document.data())")
+                    let tempTask = Task(dictionary: diff.document.data(), taskID: diff.document.documentID,
+                                        projectPath: projectPath)
+                    self.taskList.append(tempTask)
+                }
+                
+                if (diff.type == .removed) {
+                    print("Removed: \(diff.document.data())")
+                }
+            }
+            completed()
+        }
     }
     
     // load All Data
@@ -34,7 +53,7 @@ class TaskManager {
     }
     
     func get(index: Int) -> Task {
-        return TaskList[index]
+        return taskList[index]
     }
     
     
