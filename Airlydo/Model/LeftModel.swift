@@ -25,16 +25,13 @@ class LeftModel {
         projectManager.loadData {
             self.delegate?.listDidChange()
         }
-        
-        projectManager.loadOrder {
-            self.delegate?.listDidChange()
-        }
     }
     
     
     func addList(projectName: String) {
         projectManager.add(projectName: projectName)
         delegate?.listDidChange()
+        print("change")
     }
     
     func get(index: Int) -> String {
@@ -46,7 +43,7 @@ class LeftModel {
     }
     
     func count() -> Int {
-        return projectManager.orderArray.count
+        return projectManager.projectOrder.count
     }
     
     func reorder(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {

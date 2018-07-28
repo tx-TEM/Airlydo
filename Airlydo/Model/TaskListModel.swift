@@ -56,17 +56,15 @@ class TaskListModel {
         self.nowProject = nil
     }
     
-    func changeList(selectedProjcet: Project?) {
+    func changeList(selectedProjcet: Project) {
         
-        if let theSelectedProjcet = selectedProjcet {
-            //self.tasks = taskManager.readData(isArchiveMode: isArchiveMode, project: theSelectedProjcet, sortProperties: sortProperties)
-            self.pageTitle = isArchiveMode ? theSelectedProjcet.projectName + " <Archive>" : theSelectedProjcet.projectName
+        self.taskManager.loadData(isArchiveMode: isArchiveMode, projectPath: selectedProjcet.projectDirPath + "/" + selectedProjcet.projectID, completed: {
             
-        }
-        
-        self.oldChangeFunc = 1
-        self.nowProject = selectedProjcet
-        delegate?.tasksDidChange()
+            self.pageTitle = self.isArchiveMode ? selectedProjcet.projectName + " <Archive>" : selectedProjcet.projectName
+            self.oldChangeFunc = 1
+            self.nowProject = selectedProjcet
+            self.delegate?.tasksDidChange()
+        })
     }
     
     func changeListOld() {
@@ -76,7 +74,7 @@ class TaskListModel {
             changeList()
 
         case 1:
-            changeList(selectedProjcet: self.nowProject)
+            changeList(selectedProjcet: self.nowProject!)
             
         default:
             changeList()

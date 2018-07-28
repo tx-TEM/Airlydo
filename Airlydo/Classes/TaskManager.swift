@@ -13,6 +13,7 @@ class TaskManager {
     
     // Firebase
     let db = Firestore.firestore()
+    private var listener: ListenerRegistration?
     
     var taskList = [Task]()
     
@@ -20,12 +21,13 @@ class TaskManager {
         let settings = db.settings
         settings.areTimestampsInSnapshotsEnabled = true
         db.settings = settings
+        
     }
     
     
     // load Tasks from cloud
     func loadData(isArchiveMode: Bool, projectPath: String, completed: @escaping () -> ()){
-        db.collection(projectPath + "/Task").addSnapshotListener { querySnapshot, error in
+        self.listener = db.collection(projectPath + "/Task").addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
                 print("Error fetching snapshots: \(error!)")
                 return
@@ -43,6 +45,9 @@ class TaskManager {
                     print("Removed: \(diff.document.data())")
                 }
             }
+            
+            let source = snapshot.metadata.isFromCache ? "local cache" : "server"
+            print("Metadata: Data fetched from \(source)")
             completed()
         }
     }
@@ -50,6 +55,14 @@ class TaskManager {
     // load All Data
     func loadAllData (isArchiveMode: Bool) {
 
+    }
+    
+    func stopLoad() {
+        if let theListener = self.listener {
+            print(theListener)
+            theListener.remove()
+            print(theListener)
+        }
     }
     
     func get(index: Int) -> Task {

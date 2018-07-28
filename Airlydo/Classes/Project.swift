@@ -14,15 +14,26 @@ class Project {
     var projectName: String
     var projectDirPath: String  // Project, DefaultProject, ShareProject
     
-    // getter for save data
+    // getter: save data
     var dictionary: [String: Any] {
         return ["projectName": projectName]
+    }
+    
+    // getter: project full Path
+    var projectPath: String {
+        return self.projectDirPath + "/" + self.projectID
     }
     
     init() {
         self.projectID = ""
         self.projectName = ""
         self.projectDirPath = ""
+    }
+    
+    init(projectName: String, projectDirPath: String) {
+        self.projectID = ""
+        self.projectName = projectName
+        self.projectDirPath = projectDirPath
     }
     
     init(projectID: String, projectName: String, projectDirPath: String) {
@@ -37,7 +48,7 @@ class Project {
         self.init(projectID: projectID, projectName: projectName, projectDirPath: projectDirPath)
     }
     
-    func saveData() {
+    func saveData(completed: @escaping (String) -> ()) {
         // Firebase
         let db = Firestore.firestore()
         let settings = db.settings
@@ -46,12 +57,15 @@ class Project {
         
         let dataToSave = dictionary
         
+        // update
         if projectID != "" {
             db.collection(projectDirPath).document(projectID).setData(dataToSave) { err in
                 if let err = err {
                     print("Error adding document: \(err)")
+                    completed("")
                 } else {
                     print("Document Modified with ID: \(self.projectID)")
+                    completed(self.projectPath)
                 }
             }
             
@@ -60,9 +74,11 @@ class Project {
             ref = db.collection(projectDirPath).addDocument(data: dataToSave) { err in
                 if let err = err {
                     print("Error writing document: \(err)")
+                    completed("")
                 } else {
                     print("Document added with ID: \(ref!.documentID)")
                     self.projectID = ref!.documentID
+                    completed(self.projectPath)
                 }
             }
         }
