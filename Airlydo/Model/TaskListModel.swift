@@ -21,13 +21,12 @@ class TaskListModel {
     // Page Status
     var pageTitle = "All"
     var isArchiveMode = false
+    var isAllTask = false
     var nowProject: Project?
+    
     var sortProperties = [SortDescriptor(keyPath: "dueDate", ascending: true),
                           SortDescriptor(keyPath: "priority", ascending: true) ]
     
-    
-    // 0: changeList(),  1: changeList(Proj)
-    var oldChangeFunc = 0
     
     // Date Formatter
     let dateFormatter = DateFormatter()
@@ -36,7 +35,8 @@ class TaskListModel {
     weak var delegate: TaskListModelDelegate?
     
     init() {
-        taskManager.loadData(isArchiveMode: isArchiveMode, projectPath: "User/user1/DefaultProject/InBox", completed: {
+        self.nowProject = Project() //InBox
+        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completed: {
             self.delegate?.tasksDidChange()
         })
         
@@ -48,37 +48,27 @@ class TaskListModel {
     
     
     // Change Display Tasks
-    func changeList() {
+    func changeProject() {
         //self.tasks = taskManager.readAllData(isArchiveMode: isArchiveMode, sortProperties: sortProperties)
-        self.oldChangeFunc = 0
+        self.isAllTask = true
         self.pageTitle = isArchiveMode ? "All <Archive>" : "All"
         delegate?.tasksDidChange()
         self.nowProject = nil
     }
     
-    func changeList(selectedProjcet: Project) {
+    func changeProject(selectedProjcet: Project) {
         
-        self.taskManager.loadData(isArchiveMode: isArchiveMode, projectPath: selectedProjcet.projectDirPath + "/" + selectedProjcet.projectID, completed: {
+        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completed: {
             
             self.pageTitle = self.isArchiveMode ? selectedProjcet.projectName + " <Archive>" : selectedProjcet.projectName
-            self.oldChangeFunc = 1
             self.nowProject = selectedProjcet
+            self.isAllTask = false
             self.delegate?.tasksDidChange()
         })
     }
     
     func changeListOld() {
         
-        switch self.oldChangeFunc {
-        case 0:
-            changeList()
-
-        case 1:
-            changeList(selectedProjcet: self.nowProject!)
-            
-        default:
-            changeList()
-        }
     }
     
     // Change Sort Option

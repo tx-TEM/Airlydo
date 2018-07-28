@@ -8,7 +8,6 @@
 
 import Foundation
 import Firebase
-import RealmSwift
 
 class ProjectManager {
     
@@ -20,30 +19,40 @@ class ProjectManager {
         }
     }
     
+    // [inBox (Default Project]
+    private var inbox: Project
     
-    // data
-    var projectDic = [String:Project]()
-    var projectOrder = [String]()
+    var getInBox: Project {
+        return self.inbox
+    }
+    
+    // [custom & shared Project] Data
+    private var projectDic = [String:Project]()
+    private var projectOrder = [String]()
+    
+    var getProjectDic: [String:Project] {
+        return self.projectDic
+    }
     
     let userDefaults = UserDefaults.standard
     
-    // DirPath
+    // Project Directory Path
+    let defaultProjectPath = "/User/user1/DefaultProject"
     let customProjectPath = "/User/user1/CustomProject"
+    let sharedProjectPath = "/User/UserID/SharedProject"
     
     init() {
         let settings = db.settings
         settings.areTimestampsInSnapshotsEnabled = true
         db.settings = settings
         
+        inbox = Project(projectID: "InBox", projectName: "InBox", projectDirPath: defaultProjectPath)
+        
         readOrder()
         print(projectOrder)
     }
     
     // load Projects from cloud
-    //  /User/userID/DefaultProject       : DefaultProject
-    //  /User/userID/CustomProject        : CustomProject
-    //  /User/UserID/SharedProject        : SharedProject
-    
     func loadData(completed: @escaping () -> ()){
         
         // load CustomProject
@@ -56,15 +65,27 @@ class ProjectManager {
             for diff in snapshot.documentChanges {
                 if (diff.type == .added || diff.type == .modified) {
                     print("New or Modified: \(diff.document.data())")
+                    let tempProjPath = self.customProjectPath + "/" + diff.document.documentID
+                    
                     let tempProj = Project(dictionary: diff.document.data(), projectID: diff.document.documentID,
                                            projectDirPath: self.customProjectPath)
                     
-                    self.projectDic[tempProj.projectPath] = tempProj
+                    self.projectDic[tempProjPath] = tempProj
+
+                    if !(self.projectOrder.contains(tempProjPath)) {
+                        self.projectOrder.append(tempProjPath)
+                    }
                 }
                 
                 if (diff.type == .removed) {
                     print("Removed: \(diff.document.data())")
-                    self.projectDic.removeValue(forKey: diff.document.documentID)
+                    let tempProjPath = self.customProjectPath + "/" + diff.document.documentID
+                    
+                    self.projectDic.removeValue(forKey: tempProjPath)
+                    
+                    if let projIndex = self.projectOrder.index(of: tempProjPath) {
+                        self.projectOrder.remove(at: projIndex)
+                    }
                 }
                 
             }
@@ -72,6 +93,10 @@ class ProjectManager {
             print("Metadata: Data fetched from \(source)")
             completed()
         }
+        
+        // load SharedProject
+        
+        //
     }
     
     private func stopLoad() {
@@ -86,10 +111,6 @@ class ProjectManager {
     // save Project order to UserDefault
     func saveOrder(order: [String]) {
         userDefaults.set(order, forKey: "ProjectOrder")
-    }
-    
-    // need update Project order?
-    func updateOrder(projectPath: String) {
     }
     
     
@@ -117,14 +138,21 @@ class ProjectManager {
         }
     }
     
-    func getArray() -> [Project] {
-        var reArray = [Project]()
+    // get sorted Project List
+    func getProjectList() -> [Project] {
+        var reList = [Project]()
         
-        for order in projectOrder {
-            reArray.append(projectDic[order]!)
+        for key in self.projectOrder {
+            if let proj = self.projectDic[key] {
+                reList.append(proj)
+            }
         }
-        
-        return reArray
+        return reList
+    }
+    
+    // count
+    func count() -> Int {
+        return projectOrder.count
     }
     
     // reorder Project List

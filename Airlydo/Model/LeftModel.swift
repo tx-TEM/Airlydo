@@ -34,16 +34,24 @@ class LeftModel {
         print("change")
     }
     
-    func get(index: Int) -> String {
-        return projectManager.get(index: index).projectName
+    func get(index: Int) -> Project {
+        return projectManager.get(index: index)
     }
     
-    func getArray() -> [Project] {
-        return projectManager.getArray()
+    func getInBox() -> Project {
+        return projectManager.getInBox
+    }
+    
+    func getProjectDic() -> [String:Project] {
+        return projectManager.getProjectDic
+    }
+    
+    func getProjectList() -> [Project] {
+        return projectManager.getProjectList()
     }
     
     func count() -> Int {
-        return projectManager.projectOrder.count
+        return projectManager.count()
     }
     
     func reorder(sourceIndexPath: IndexPath, destinationIndexPath: IndexPath) {

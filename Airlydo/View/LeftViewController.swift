@@ -154,7 +154,7 @@ extension LeftViewController: UITableViewDelegate, UITableViewDataSource {
             cell = tableView.dequeueReusableCell(withIdentifier: "LCustomSlideListCell", for: indexPath) as! SlideListCell
             
             // Configure the cell...
-            cell.textLabel?.text = leftModel.get(index: indexPath.row)
+            cell.textLabel?.text = leftModel.get(index: indexPath.row).projectName
             cell.backgroundColor = UIColor.white
         }
         
@@ -172,22 +172,22 @@ extension LeftViewController: UITableViewDelegate, UITableViewDataSource {
             let NavigationController = slideMenuController.mainViewController as! UINavigationController
             let TaskListViewController = NavigationController.topViewController as! TaskListViewController
             
+            // Default Menu
             if(tableView.tag == 0) {
                 
                 switch indexPath.row {
                 case 0:
-                    TaskListViewController.taskListModel.changeList()
-        
+                    TaskListViewController.taskListModel.changeProject(selectedProjcet: self.leftModel.getInBox())
                 case 1:
-                    TaskListViewController.taskListModel.changeList()
+                    TaskListViewController.taskListModel.changeProject()
                 case 2:
-                    TaskListViewController.taskListModel.changeList()
+                    TaskListViewController.taskListModel.changeProject()
                 default:
-                    TaskListViewController.taskListModel.changeList()
+                    TaskListViewController.taskListModel.changeProject()
                 }
                 
             }else{
-                //TaskListViewController.taskListModel.changeList(selectedProjcet: leftModel.get(index: indexPath.row))
+                TaskListViewController.taskListModel.changeProject(selectedProjcet: leftModel.get(index: indexPath.row))
             }
             slideMenuController.closeLeft()
         }
@@ -210,7 +210,7 @@ extension LeftViewController: UITableViewDragDelegate {
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         
         // Get the Data
-        let item = leftModel.get(index: indexPath.row)
+        let item = leftModel.get(index: indexPath.row).projectName
         let itemProvider = NSItemProvider()
         
         itemProvider.registerDataRepresentation(forTypeIdentifier: kUTTypePlainText as String, visibility: .all) { completion in

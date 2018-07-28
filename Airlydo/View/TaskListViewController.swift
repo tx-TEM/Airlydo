@@ -26,10 +26,11 @@ class TaskListViewController: UIViewController {
     @IBAction func addTaskButtonTapped(_ sender: UIButton) {
 
         let leftViewController = self.slideMenuController()?.leftViewController as! LeftViewController
-        let projectArray = leftViewController.leftModel.getArray()
+        let projectDic = leftViewController.leftModel.getProjectDic()
+        let projectList = leftViewController.leftModel.getProjectList()
         
         let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
-        TaskDetailViewController.taskDetailModel = TaskDetailModel(projects: projectArray) // Set new Task
+        TaskDetailViewController.taskDetailModel = TaskDetailModel(projects: projectList, projectDic: projectDic) // Set new Task
         self.navigationController?.pushViewController(TaskDetailViewController, animated: true)
     }
     
@@ -214,11 +215,13 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let leftViewController = self.slideMenuController()?.leftViewController as! LeftViewController
-        let projectArray = leftViewController.leftModel.getArray()
+        let projectDic = leftViewController.leftModel.getProjectDic()
+        let projectList = leftViewController.leftModel.getProjectList()
         
         // push view
         let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
-        TaskDetailViewController.taskDetailModel = TaskDetailModel(task: taskListModel.get(index: indexPath.row), projects: projectArray)
+        TaskDetailViewController.taskDetailModel = TaskDetailModel(task: taskListModel.get(index: indexPath.row),
+                                                                   projects: projectList, projectDic: projectDic)
         self.navigationController?.pushViewController(TaskDetailViewController, animated: true)
         
     }

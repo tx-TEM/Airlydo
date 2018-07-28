@@ -39,7 +39,7 @@ class Task{
         self.dueDate = Date()
         self.howRepeat = 3
         self.priority = 1
-        self.projectPath = "/User/user1/DefaultProject/InBox"
+        self.projectPath = ""
     }
     
     init(taskID: String, taskName: String, note: String, isArchive: Bool,

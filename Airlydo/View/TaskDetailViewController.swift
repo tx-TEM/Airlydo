@@ -24,8 +24,8 @@ class TaskDetailViewController: FormViewController {
         let valuesDictionary = form.values()
         
         // Reminder
-        let formReminderTags = [String](valuesDictionary.keys).filter({$0.contains("ReminderTag_")}).sorted()
-        var formRemindList: [Date] = []
+        //let formReminderTags = [String](valuesDictionary.keys).filter({$0.contains("ReminderTag_")}).sorted()
+        //var formRemindList: [Date] = []
         
         //for remTag in formReminderTags{
         //    formRemindList.append(valuesDictionary[remTag] as! Date)
@@ -75,9 +75,9 @@ class TaskDetailViewController: FormViewController {
             <<< LabelRow("ProjectTag"){
                 $0.title = "Project"
                 
-                if let projectPath = taskDetailModel?.theTask?.projectPath {
-                    $0.value = projectPath
-                    formProjectPath = taskDetailModel?.theTask?.projectPath ?? "/User/user1/DefaultProject/InBox"
+                if taskDetailModel?.theTask?.projectPath != "" {
+                    $0.value = taskDetailModel?.theTask?.projectPath
+                    formProjectPath = (taskDetailModel?.theTask?.projectPath)!
                 }else{
                     $0.value = "InBox"
                     formProjectPath = "/User/user1/DefaultProject/InBox"
@@ -106,7 +106,7 @@ class TaskDetailViewController: FormViewController {
                                 (action: UIAlertAction!) -> Void in
                                 
                                 row.value = action.title!
-                                self.formProjectPath = data.projectDirPath + "/" + data.projectID
+                                self.formProjectPath = data.projectPath
                                 row.updateCell()
                                 
                             }))

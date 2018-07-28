@@ -25,9 +25,9 @@ class Project {
     }
     
     init() {
-        self.projectID = ""
-        self.projectName = ""
-        self.projectDirPath = ""
+        self.projectID = "InBox"
+        self.projectName = "InBox"
+        self.projectDirPath = "/User/user1/DefaultProject"
     }
     
     init(projectName: String, projectDirPath: String) {

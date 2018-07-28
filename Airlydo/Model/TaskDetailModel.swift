@@ -17,6 +17,8 @@ class TaskDetailModel {
     
     var theTask: Task?
     var projectList = [Project]()
+    var projectDic = [String: Project]()
+
     var reminderManager = ReminderManager()
     
     // Page Status
@@ -30,15 +32,17 @@ class TaskDetailModel {
         self.pageTitle = "Add Task"
     }
     
-    init(projects: [Project]) {
+    init(projects: [Project], projectDic: [String:Project]) {
         theTask = Task()
         self.projectList = projects
+        self.projectDic = projectDic
         self.pageTitle = "Add Task"
     }
     
-    init(task: Task, projects: [Project]) {
+    init(task: Task, projects: [Project], projectDic: [String:Project]) {
         theTask = task  //document ID has been setted
         self.projectList = projects
+        self.projectDic = projectDic
         self.pageTitle = "Edit Task"
     }
     
