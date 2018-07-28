@@ -9,7 +9,7 @@
 import Firebase
 
 // Task
-class Task{
+class Task {
     var taskID: String
     var taskName: String
     var note: String
@@ -109,12 +109,45 @@ class Task{
     
     // Delete Task
     func delete() {
+        // Firebase
+        let db = Firestore.firestore()
+        let settings = db.settings
+        settings.areTimestampsInSnapshotsEnabled = true
+        db.settings = settings
+        
+        db.collection(self.projectPath + "/Task").document(self.taskID).delete() { err in
+            if let err = err {
+                print("Error removing document: \(err)")
+            } else {
+                print("Document successfully removed!")
+            }
+        }
         
     }
     
     // Send the task to archive
     func archive() {
+        // Firebase
+        let db = Firestore.firestore()
+        let settings = db.settings
+        settings.areTimestampsInSnapshotsEnabled = true
+        db.settings = settings
         
+        db.collection(self.projectPath + "/Task").document(self.taskID).updateData([
+            "isArchive": true
+        ]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
     }
         
+}
+
+extension Task: Equatable {
+    static func == (lhs: Task, rhs: Task) -> Bool {
+        return lhs.taskID == rhs.taskID && lhs.projectPath == rhs.projectPath
+    }
 }

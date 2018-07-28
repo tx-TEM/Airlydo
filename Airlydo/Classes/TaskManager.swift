@@ -32,7 +32,8 @@ class TaskManager {
     func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping () -> ()){
         
         self.taskList = []
-        self.listener = db.collection(projectPath + "/Task").addSnapshotListener { querySnapshot, error in
+        self.listener = db.collection(projectPath + "/Task")
+            .whereField("isArchive", isEqualTo: isArchiveMode).addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
                 print("Error fetching snapshots: \(error!)")
                 return
@@ -48,6 +49,12 @@ class TaskManager {
                 
                 if (diff.type == .removed) {
                     print("Removed: \(diff.document.data())")
+                    let tempTask = Task(dictionary: diff.document.data(), taskID: diff.document.documentID,
+                                        projectPath: projectPath)
+                    
+                    if let taskIndex = self.taskList.index(of: tempTask) {
+                        self.taskList.remove(at: taskIndex)
+                    }
                 }
             }
             
@@ -73,6 +80,7 @@ class TaskManager {
     func count() -> Int {
         return self.taskList.count
     }
+    
     
     deinit {
         self.stopLoad()

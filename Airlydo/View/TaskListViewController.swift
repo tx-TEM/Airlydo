@@ -36,12 +36,12 @@ class TaskListViewController: UIViewController {
     
     @IBAction func mainButtonTapped(_ sender: UIButton) {
         taskListModel.isArchiveMode = false
-        taskListModel.changeListOld()
+        taskListModel.changeProjectOld()
     }
 
     @IBAction func archiveButtonTapped(_ sender: UIButton) {
         taskListModel.isArchiveMode = true
-        taskListModel.changeListOld()
+        taskListModel.changeProjectOld()
     }
     
     @IBAction func projectSettingButtonTapped(_ sender: UIButton) {

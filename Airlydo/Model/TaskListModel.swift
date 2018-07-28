@@ -21,8 +21,8 @@ class TaskListModel {
     // Page Status
     var pageTitle = "All"
     var isArchiveMode = false
-    var isAllTask = false
-    var nowProject: Project?
+    private var isAllTask = false
+    private var nowProject: Project?
     
     var sortProperties = [SortDescriptor(keyPath: "dueDate", ascending: true),
                           SortDescriptor(keyPath: "priority", ascending: true) ]
@@ -67,14 +67,20 @@ class TaskListModel {
         })
     }
     
-    func changeListOld() {
-        
+    func changeProjectOld() {
+        if let nowProj = self.nowProject {
+            changeProject(selectedProjcet: nowProj)
+        } else {
+            if(isAllTask) {
+                changeProject()
+            }
+        }
     }
     
     // Change Sort Option
     func changeSortOption(sortProperties: [SortDescriptor]) {
         self.sortProperties = sortProperties
-        self.changeListOld()
+        self.changeProjectOld()
     }
     
     // Date to String using Formatter
@@ -121,6 +127,7 @@ class TaskListModel {
     func genRepeatask(index: Int) {
         let repeatTask = taskManager.get(index: index)
         repeatTask.dueDate = calcRepeatTime(date: repeatTask.dueDate, howRepeat: repeatTask.howRepeat)
+        repeatTask.taskID = "" // resetID
         
         // save repeatTask
         repeatTask.saveData() { success in
@@ -129,7 +136,7 @@ class TaskListModel {
             }
         }
 
-        //self.delegate?.tasksDidChange()
+        self.delegate?.tasksDidChange()
     }
     
     func count() -> Int {
@@ -138,5 +145,13 @@ class TaskListModel {
     
     func get(index: Int) -> Task {
         return taskManager.get(index: index)
+    }
+    
+    func delete(index: Int) {
+        taskManager.get(index: index).delete()
+    }
+    
+    func archive(index: Int) {
+        taskManager.get(index: index).archive()
     }
 }

@@ -19,7 +19,7 @@ class ProjectManager {
         }
     }
     
-    // [inBox (Default Project]
+    // [inBox (Default Project)]
     private var inbox: Project
     
     var getInBox: Project {
