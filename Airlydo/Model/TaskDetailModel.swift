@@ -15,9 +15,9 @@ protocol TaskDetailModelDelegate: class {
 
 class TaskDetailModel {
     
-    var theTask: Task?
+    var theTask: Task
     var projectList = [Project]()
-    var projectDic = [String: Project]()
+    var projectDic = [String: Project]()  // [ProjectPath: Project]
 
     var reminderManager = ReminderManager()
     
@@ -46,6 +46,12 @@ class TaskDetailModel {
         self.pageTitle = "Edit Task"
     }
     
+    // get ProjectName
+    func getProjectName(projectPath: String) -> String {
+        let projName = self.projectDic[projectPath]?.projectName ?? "Read Error"
+        return projName
+    }
+    
     // save
     func saveTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
                  formPriority: String, formProjectPath: String) {
@@ -57,14 +63,14 @@ class TaskDetailModel {
         components.minute = 59
         components.second = 59
         
-        theTask?.taskName = formTaskName
-        theTask?.note = formNote
-        theTask?.dueDate = calendar.date(from: components)!
-        theTask?.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
-        theTask?.priority = priorityStringToInt(priorityText: formPriority)
-        theTask?.projectPath = formProjectPath
+        theTask.taskName = formTaskName
+        theTask.note = formNote
+        theTask.dueDate = calendar.date(from: components)!
+        theTask.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
+        theTask.priority = priorityStringToInt(priorityText: formPriority)
+        theTask.projectPath = formProjectPath
         
-        theTask?.saveData() { success in
+        theTask.saveData() { success in
             if(success){
                 print("complete")
             }

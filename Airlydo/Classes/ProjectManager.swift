@@ -19,20 +19,24 @@ class ProjectManager {
         }
     }
     
-    // [inBox (Default Project)]
+    // [inBox Instance (Default Project)]
     private var inbox: Project
     
     var getInBox: Project {
         return self.inbox
     }
     
-    // [custom & shared Project] Data
+    // All Project Instance
     private var projectDic = [String:Project]()
-    private var projectOrder = [String]()
     
     var getProjectDic: [String:Project] {
         return self.projectDic
     }
+    
+    // [custom & shared Project] Order
+    private var projectOrder = [String]()
+    
+    
     
     let userDefaults = UserDefaults.standard
     
@@ -47,6 +51,7 @@ class ProjectManager {
         db.settings = settings
         
         inbox = Project(projectID: "InBox", projectName: "InBox", projectDirPath: defaultProjectPath)
+        projectDic[inbox.projectPath] = inbox
         
         readOrder()
         print(projectOrder)
@@ -151,6 +156,10 @@ class ProjectManager {
     func getProjectList() -> [Project] {
         var reList = [Project]()
         
+        // 1st is InBox (Default Project)
+        reList.append(self.inbox)
+        
+        // Custom & Shared Project
         for key in self.projectOrder {
             if let proj = self.projectDic[key] {
                 reList.append(proj)

@@ -61,11 +61,11 @@ class TaskDetailViewController: FormViewController {
         form +++ Section("Task")
             <<< TextRow("TitleTag"){
                 $0.title = "Add a Task"
-                $0.value = taskDetailModel?.theTask?.taskName
+                $0.value = taskDetailModel?.theTask.taskName
             }
             <<< LabelRow("NoteTag"){
                 $0.title = "Note"
-                $0.value = taskDetailModel?.theTask?.note
+                $0.value = taskDetailModel?.theTask.note
                 }.onCellSelection{ cell, row in
                     let SetNotePageController = self.storyboard?.instantiateViewController(withIdentifier: "SetNotePageController") as! SetNotePageController
                     SetNotePageController.noteValue = row.value
@@ -74,10 +74,11 @@ class TaskDetailViewController: FormViewController {
             
             <<< LabelRow("ProjectTag"){
                 $0.title = "Project"
+                let projPath = taskDetailModel!.theTask.projectPath
                 
-                if taskDetailModel?.theTask?.projectPath != "" {
-                    $0.value = taskDetailModel?.theTask?.projectPath
-                    formProjectPath = (taskDetailModel?.theTask?.projectPath)!
+                if projPath != "" {
+                    $0.value = taskDetailModel!.getProjectName(projectPath: projPath)
+                    formProjectPath = projPath
                 }else{
                     $0.value = "InBox"
                     formProjectPath = "/User/user1/DefaultProject/InBox"
@@ -91,14 +92,6 @@ class TaskDetailViewController: FormViewController {
                                                        preferredStyle: .actionSheet)
                     
                     // Add Action
-                    controller.addAction(UIAlertAction(title: "InBox", style: .default, handler:{
-                        (action: UIAlertAction!) -> Void in
-                        row.value = action.title!
-                        self.formProjectPath = "/User/user1/DefaultProject/InBox"
-                        row.updateCell()
-                    }))
-                    
-                    
                     if let projectList = self.taskDetailModel?.projectList {
                         
                         for data in projectList {
@@ -122,7 +115,7 @@ class TaskDetailViewController: FormViewController {
         form +++ Section("")
             <<< DateRow("DueDateTag") {
                 $0.title = "Due Date"
-                $0.value = taskDetailModel?.theTask?.dueDate
+                $0.value = taskDetailModel?.theTask.dueDate
                 
             }
             
@@ -133,7 +126,7 @@ class TaskDetailViewController: FormViewController {
                 var repeatArray = ["毎月","毎週","毎日", "なし"]
                 $0.options = repeatArray
                 
-                if let howRepeat = taskDetailModel?.theTask?.howRepeat{
+                if let howRepeat = taskDetailModel?.theTask.howRepeat{
                     $0.value = repeatArray[howRepeat]
                 }else{
                     $0.value = repeatArray[3]
@@ -173,7 +166,7 @@ class TaskDetailViewController: FormViewController {
                 var priorityArray = ["High","Middle","Low"]
                 $0.options = priorityArray
                 $0.value = "Middle"
-                if let priority = taskDetailModel?.theTask?.priority{
+                if let priority = taskDetailModel?.theTask.priority{
                     $0.value = priorityArray[priority]
                 }else{
                     $0.value = priorityArray[1]
