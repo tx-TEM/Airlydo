@@ -40,21 +40,32 @@ class TaskManager {
             }
             
             for diff in snapshot.documentChanges {
-                if (diff.type == .added || diff.type == .modified) {
-                    print("New or Modified: \(diff.document.data())")
-                    let tempTask = Task(dictionary: diff.document.data(), taskID: diff.document.documentID,
-                                        projectPath: projectPath)
+                
+                let tempTask = Task(dictionary: diff.document.data(), taskID: diff.document.documentID,
+                                    projectPath: projectPath)
+                
+                if (diff.type == .added) {
+
                     self.taskList.append(tempTask)
+                    print("New: \(tempTask.taskName)")
                 }
                 
-                if (diff.type == .removed) {
-                    print("Removed: \(diff.document.data())")
-                    let tempTask = Task(dictionary: diff.document.data(), taskID: diff.document.documentID,
-                                        projectPath: projectPath)
+                if (diff.type == .modified) {
                     
                     if let taskIndex = self.taskList.index(of: tempTask) {
                         self.taskList.remove(at: taskIndex)
                     }
+                    
+                    self.taskList.append(tempTask)
+                    print("Modified: \(tempTask.taskName)")
+                }
+                
+                if (diff.type == .removed) {
+
+                    if let taskIndex = self.taskList.index(of: tempTask) {
+                        self.taskList.remove(at: taskIndex)
+                    }
+                    print("Removed: \(tempTask.taskName)")
                 }
             }
             

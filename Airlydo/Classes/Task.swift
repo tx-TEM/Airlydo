@@ -15,8 +15,10 @@ class Task {
     var note: String
     var isArchive: Bool
     var dueDate: Date
+    var reminderList = [Date]()
     var howRepeat: Int  //0:毎月, 1:毎週, 2:毎日, 3:なし
     var priority: Int   //0:low, 1:middle, 2:high
+    
     
     // Parent Project
     var projectPath: String
@@ -27,6 +29,7 @@ class Task {
                 "note": note,
                 "isArchive": isArchive,
                 "dueDate": dueDate,
+                "reminderList": reminderList,
                 "howRepeat": howRepeat,
                 "priority": priority]
     }
@@ -37,19 +40,21 @@ class Task {
         self.note = ""
         self.isArchive = false
         self.dueDate = Date()
+        self.reminderList = []
         self.howRepeat = 3
         self.priority = 1
         self.projectPath = ""
     }
     
-    init(taskID: String, taskName: String, note: String, isArchive: Bool,
-         dueDate: Date, howRepeat: Int, priority: Int, projectPath: String) {
+    init(taskID: String, taskName: String, note: String, isArchive: Bool,dueDate: Date,
+         reminderList: [Date], howRepeat: Int, priority: Int, projectPath: String) {
         
         self.taskID = taskID
         self.taskName = taskName
         self.note = note
         self.isArchive = isArchive
         self.dueDate = dueDate
+        self.reminderList = reminderList
         self.howRepeat = howRepeat
         self.priority = priority
         self.projectPath = projectPath
@@ -61,14 +66,22 @@ class Task {
         let note = dictionary["note"] as! String? ?? ""
         let isArchive = dictionary["isArchive"] as! Bool? ?? false
         
+        // convert Timestamp to Date
         let dueDateTimeStamp = dictionary["dueDate"] as! Timestamp? ?? Timestamp(date: Date())
         let dueDate = dueDateTimeStamp.dateValue()
+        
+        // convert [Timestamp] to [Date]
+        let reminderListTimeStamp = dictionary["reminderList"] as! [Timestamp]? ?? [Timestamp]()
+        var reminderList = [Date]()
+        for reminderTimestamp in reminderListTimeStamp {
+            reminderList.append(reminderTimestamp.dateValue())
+        }
         
         let howRepeat = dictionary["howRepeat"] as! Int? ?? 3
         let priority = dictionary["priority"] as! Int? ?? 1
         
-        self.init(taskID: taskID, taskName: taskName, note: note, isArchive: isArchive,
-                  dueDate: dueDate, howRepeat: howRepeat, priority: priority, projectPath: projectPath)
+        self.init(taskID: taskID, taskName: taskName, note: note, isArchive: isArchive, dueDate: dueDate,
+                  reminderList: reminderList, howRepeat: howRepeat, priority: priority, projectPath: projectPath)
     }
     
     func saveData(completed: @escaping (Bool) -> ()) {

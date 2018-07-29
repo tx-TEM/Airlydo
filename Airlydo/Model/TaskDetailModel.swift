@@ -53,8 +53,8 @@ class TaskDetailModel {
     }
     
     // save
-    func saveTask(formTaskName: String, formNote: String, formDueDate: Date, formHowRepeat: String,
-                 formPriority: String, formProjectPath: String) {
+    func saveTask(formTaskName: String, formNote: String, formDueDate: Date,
+                  formReminderList: [Date], formHowRepeat: String, formPriority: String, formProjectPath: String) {
         
         // dueDate -> 11:59:59
         let calendar = Calendar.current
@@ -66,6 +66,7 @@ class TaskDetailModel {
         theTask.taskName = formTaskName
         theTask.note = formNote
         theTask.dueDate = calendar.date(from: components)!
+        theTask.reminderList = formReminderList
         theTask.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
         theTask.priority = priorityStringToInt(priorityText: formPriority)
         theTask.projectPath = formProjectPath

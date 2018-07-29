@@ -24,17 +24,22 @@ class TaskDetailViewController: FormViewController {
         let valuesDictionary = form.values()
         
         // Reminder
-        //let formReminderTags = [String](valuesDictionary.keys).filter({$0.contains("ReminderTag_")}).sorted()
-        //var formRemindList: [Date] = []
+        let formReminderTags = [String](valuesDictionary.keys).filter({$0.contains("ReminderTag_")}).sorted()
+        var formRemindList: [Date] = []
         
-        //for remTag in formReminderTags{
-        //    formRemindList.append(valuesDictionary[remTag] as! Date)
-        //}
+        for remTag in formReminderTags{
+            let reminder = valuesDictionary[remTag] as? Date
+            
+            if let theReminder = reminder {
+                formRemindList.append(theReminder)
+            }
+        }
         
         
         taskDetailModel?.saveTask(formTaskName: valuesDictionary["TitleTag"] as! String,
                                   formNote: valuesDictionary["NoteTag"] as! String,
                                   formDueDate: valuesDictionary["DueDateTag"] as! Date,
+                                  formReminderList: formRemindList,
                                   formHowRepeat: valuesDictionary["RepeatTag"] as! String,
                                   formPriority: valuesDictionary["PriorityTag"] as! String,
                                   formProjectPath: formProjectPath)
@@ -147,16 +152,13 @@ class TaskDetailViewController: FormViewController {
                                                 $0.title = ""
                                             }
                                         }
-                                        /*
-                                         if let remindList = self.taskDetailModel?.theTask?.remindList {
-                                         for (index,data) in remindList.enumerated() {
-                                         $0 <<< DateTimeRow("ReminderTag_\(index+1)") {
-                                         $0.title = ""
-                                         $0.value = data.remDate
-                                         }
-                                         }
-                                         }
-                                         */
+                                        
+                                        for (index, reminder) in self.taskDetailModel!.theTask.reminderList.enumerated() {
+                                            $0 <<< DateTimeRow("ReminderTag_\(index+1)") {
+                                                $0.title = ""
+                                                $0.value = reminder
+                                            }
+                                        }
         }
         
         form +++ Section("Option")
