@@ -1,6 +1,6 @@
 //
 //  TaskDetailModel.swift
-//  ToDoList
+//  Airlydo
 //
 //  Created by yoshiki-t on 2018/06/13.
 //  Copyright © 2018年 yoshiki-t. All rights reserved.
@@ -19,7 +19,6 @@ class TaskDetailModel {
     var projectList = [Project]()
     var projectDic = [String: Project]()  // [ProjectPath: Project]
 
-    var reminderManager = ReminderManager()
     
     // Page Status
     var pageTitle = "Add Task"
@@ -63,21 +62,51 @@ class TaskDetailModel {
         components.minute = 59
         components.second = 59
         
+        let oldProjectPath = theTask.projectPath
+        
         theTask.taskName = formTaskName
         theTask.note = formNote
         theTask.dueDate = calendar.date(from: components)!
-        theTask.reminderList = formReminderList
+        theTask.reminderList = self.getUniqueReminder(reminderList: formReminderList)
         theTask.howRepeat = howRepeatStringToInt(howRepeatText: formHowRepeat)
         theTask.priority = priorityStringToInt(priorityText: formPriority)
         theTask.projectPath = formProjectPath
         
         theTask.saveData() { success in
             if(success){
-                print("complete")
+                
+                // Project Changed?
+                if (oldProjectPath != self.theTask.projectPath && oldProjectPath != "") {
+                    
+                    // Delete theTask from oldProject
+                    self.theTask.projectPath = oldProjectPath
+                    self.theTask.delete()
+                }
+                
             }
         }
     }
     
+    // Check ReminderList
+    // Eliminate duplication and Sort
+    private func getUniqueReminder(reminderList: [Date]) -> [Date] {
+        var tempRemindList = [Date]()
+        var uniqueRemindList = [Date]()
+        
+        // Reminder sec -> 0
+        let calendar = Calendar.current
+        
+        for reminder in reminderList {
+            let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: reminder)
+            tempRemindList.append(calendar.date(from: components)!)
+        }
+        
+        // Eliminate duplication
+        let orderedRemindList = NSOrderedSet(array: tempRemindList)
+        uniqueRemindList = orderedRemindList.array as! [Date]
+
+        return uniqueRemindList.sorted()
+    }
     
     // convert howRepeatText to Integer
     func howRepeatStringToInt(howRepeatText: String)-> Int {

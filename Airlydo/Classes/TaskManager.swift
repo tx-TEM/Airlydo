@@ -47,7 +47,7 @@ class TaskManager {
                 if (diff.type == .added) {
 
                     self.taskList.append(tempTask)
-                    print("New: \(tempTask.taskName)")
+                    print("New: \(tempTask.taskName + "," + tempTask.taskID)")
                 }
                 
                 if (diff.type == .modified) {

@@ -94,7 +94,7 @@ class Task {
         let dataToSave = dictionary
         
         if taskID != "" {  //update Data
-            db.collection(self.projectPath + "/Task").document(taskID).setData(dataToSave) { err in
+            db.collection(self.projectPath + "/Task").document(self.taskID).setData(dataToSave) { err in
                 if let err = err {
                     print("Error adding document: \(err)")
                     completed(false)
@@ -127,6 +127,8 @@ class Task {
         let settings = db.settings
         settings.areTimestampsInSnapshotsEnabled = true
         db.settings = settings
+        
+        print(self.projectPath + "/" + self.taskID)
         
         db.collection(self.projectPath + "/Task").document(self.taskID).delete() { err in
             if let err = err {

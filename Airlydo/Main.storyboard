@@ -258,12 +258,12 @@
                     <connections>
                         <outlet property="signInButton" destination="wnE-Yt-4cP" id="15w-F5-3VL"/>
                         <outlet property="statusText" destination="aCl-xn-rrQ" id="Ozr-Da-7Eb"/>
-                        <segue destination="APc-m0-TFZ" kind="show" id="X5K-C6-nyp"/>
+                        <segue destination="APc-m0-TFZ" kind="show" identifier="toContainer" id="X5K-C6-nyp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3UR-m6-4gX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2628" y="-27"/>
+            <point key="canvasLocation" x="-2255" y="-29"/>
         </scene>
         <!--Container View Controller-->
         <scene sceneID="izM-fc-2PJ">
@@ -279,7 +279,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KRU-BO-95k" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1735" y="-27"/>
+            <point key="canvasLocation" x="-1548" y="-28"/>
         </scene>
         <!--Left View Controller-->
         <scene sceneID="c3m-O2-Ess">
@@ -395,7 +395,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bXa-vL-f3y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1735" y="752"/>
+            <point key="canvasLocation" x="-864" y="900"/>
         </scene>
     </scenes>
     <resources>

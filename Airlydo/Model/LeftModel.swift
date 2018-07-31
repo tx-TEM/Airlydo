@@ -1,6 +1,6 @@
 //
 //  LeftViewModel_CustomList.swift
-//  ToDoList
+//  AirlyDo
 //
 //  Created by yoshiki-t on 2018/06/12.
 //  Copyright © 2018年 yoshiki-t. All rights reserved.

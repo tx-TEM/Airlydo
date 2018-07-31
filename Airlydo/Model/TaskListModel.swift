@@ -125,9 +125,8 @@ class TaskListModel {
     
     // Generate Repeat Task
     func genRepeatask(index: Int) {
-        let repeatTask = taskManager.get(index: index)
-        repeatTask.dueDate = calcRepeatTime(date: repeatTask.dueDate, howRepeat: repeatTask.howRepeat)
-        repeatTask.taskID = "" // resetID
+        let baseTask = taskManager.get(index: index)
+        let repeatTask = Task(dictionary: baseTask.dictionary, taskID: "", projectPath: baseTask.projectPath)
         
         // save repeatTask
         repeatTask.saveData() { success in

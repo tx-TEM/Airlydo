@@ -176,10 +176,12 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
             
             
             if let cell = cell, let indexPath = tableView.indexPath(for: cell) {
+                print(self?.taskListModel.get(index: indexPath.row).dueDate)
                 // Genarate Repeat Task
                 if(self?.taskListModel.get(index: indexPath.row).howRepeat != 3){
                     self?.taskListModel.genRepeatask(index: indexPath.row)
                 }
+                print(self?.taskListModel.get(index: indexPath.row).dueDate)
                 
                 // Remove Task
                 self?.taskListModel.deleteTask(index: indexPath.row)
