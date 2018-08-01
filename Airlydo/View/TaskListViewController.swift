@@ -140,9 +140,7 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
         // Configure the cell...
         cell.TaskTitleLabel.text = theTask.taskName
         cell.TaskInfoLabel.text = theTask.note
-    
         cell.AssignLabel.text = "自分"
-        
         cell.DateLabel.text = taskListModel.dueDateToString(dueDate: theTask.dueDate)
         
         //cell.label.text = dataList[indexPath.row]

@@ -34,6 +34,7 @@ class Task {
                 "priority": priority]
     }
     
+    
     init() {
         self.taskID = ""
         self.taskName = ""
@@ -59,6 +60,7 @@ class Task {
         self.priority = priority
         self.projectPath = projectPath
     }
+    
     
     // For firestore
     convenience init(dictionary: [String: Any], taskID: String, projectPath: String) {
@@ -157,6 +159,21 @@ class Task {
                 print("Document successfully updated")
             }
         }
+    }
+    
+    // Copy
+    func copy() -> Task {
+        let instance = Task(taskID: self.taskID,
+                            taskName: self.taskName,
+                            note: self.note,
+                            isArchive: self.isArchive,
+                            dueDate: self.dueDate,
+                            reminderList: self.reminderList,
+                            howRepeat: self.howRepeat,
+                            priority: self.priority,
+                            projectPath: self.projectPath)
+        
+        return instance
     }
         
 }

@@ -63,7 +63,6 @@ class TaskListModel {
             self.pageTitle = self.isArchiveMode ? selectedProjcet.projectName + " <Archive>" : selectedProjcet.projectName
             self.nowProject = selectedProjcet
             self.isAllTask = false
-            self.delegate?.tasksDidChange()
         })
     }
     
@@ -91,13 +90,12 @@ class TaskListModel {
     // Delete Task
     func deleteTask(index: Int) {
         taskManager.get(index: index).delete()
-        //delegate?.tasksDidChange()
+        
     }
     
     // Send the task to archive
     func archiveTask(index: Int) {
         taskManager.get(index: index).archive()
-        //self.delegate?.tasksDidChange()
 
     }
     
@@ -126,7 +124,16 @@ class TaskListModel {
     // Generate Repeat Task
     func genRepeatask(index: Int) {
         let baseTask = taskManager.get(index: index)
-        let repeatTask = Task(dictionary: baseTask.dictionary, taskID: "", projectPath: baseTask.projectPath)
+        let repeatTask = baseTask.copy()
+        
+        // update
+        repeatTask.taskID = ""
+        repeatTask.dueDate = calcRepeatTime(date: baseTask.dueDate, howRepeat: baseTask.howRepeat)
+        repeatTask.reminderList = []
+        
+        for reminder in baseTask.reminderList {
+            repeatTask.reminderList.append(calcRepeatTime(date: reminder, howRepeat: baseTask.howRepeat))
+        }
         
         // save repeatTask
         repeatTask.saveData() { success in
@@ -134,8 +141,6 @@ class TaskListModel {
                 print("complete")
             }
         }
-
-        self.delegate?.tasksDidChange()
     }
     
     func count() -> Int {
