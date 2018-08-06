@@ -25,10 +25,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate  {
         // Google Firestore
         FirebaseApp.configure()
         
-        // Google Sign-in
         // Initialize sign-in
-        //GIDSignIn.sharedInstance().clientID = "752419583646-pfbeb5skfj6h84tkmakdnq6berefieqt.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
+        
+        // Initialize Firestore
+        let db = Firestore.firestore()
+        let settings = db.settings
+        settings.areTimestampsInSnapshotsEnabled = true
+        db.settings = settings
         
         // Notification / Reminder Setting
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests();

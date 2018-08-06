@@ -9,8 +9,8 @@
 import UIKit
 import MobileCoreServices
 import SlideMenuControllerSwift
-import RealmSwift
 import GoogleSignIn
+import Firebase
 
 class LeftViewController: UIViewController {
     
@@ -94,8 +94,8 @@ class LeftViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if let cUser = GIDSignIn.sharedInstance().currentUser {
-            UserMail.text = cUser.profile.email
+        if let cUser = Auth.auth().currentUser {
+            UserMail.text = cUser.email
         }else{
             UserMail.text = "example@gmail.com"
         }

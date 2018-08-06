@@ -89,9 +89,6 @@ class Task {
     func saveData(completed: @escaping (Bool) -> ()) {
         // Firebase
         let db = Firestore.firestore()
-        let settings = db.settings
-        settings.areTimestampsInSnapshotsEnabled = true
-        db.settings = settings
         
         let dataToSave = dictionary
         
@@ -101,7 +98,6 @@ class Task {
                     print("Error adding document: \(err)")
                     completed(false)
                 } else {
-                    print("Document Modified with ID: \(self.taskID)")
                     completed(true)
                 }
             }
@@ -113,7 +109,6 @@ class Task {
                     print("Error writing document: \(err)")
                     completed(false)
                 } else {
-                    print("Document added with ID: \(ref!.documentID)")
                     self.taskID = ref!.documentID
                     completed(true)
                 }
@@ -126,17 +121,10 @@ class Task {
     func delete() {
         // Firebase
         let db = Firestore.firestore()
-        let settings = db.settings
-        settings.areTimestampsInSnapshotsEnabled = true
-        db.settings = settings
-        
-        print(self.projectPath + "/" + self.taskID)
         
         db.collection(self.projectPath + "/Task").document(self.taskID).delete() { err in
             if let err = err {
                 print("Error removing document: \(err)")
-            } else {
-                print("Document successfully removed!")
             }
         }
         
@@ -146,17 +134,12 @@ class Task {
     func archive() {
         // Firebase
         let db = Firestore.firestore()
-        let settings = db.settings
-        settings.areTimestampsInSnapshotsEnabled = true
-        db.settings = settings
         
         db.collection(self.projectPath + "/Task").document(self.taskID).updateData([
             "isArchive": true
         ]) { err in
             if let err = err {
                 print("Error updating document: \(err)")
-            } else {
-                print("Document successfully updated")
             }
         }
     }

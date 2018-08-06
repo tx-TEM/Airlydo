@@ -11,6 +11,13 @@ import Firebase
 
 class ProjectManager {
     
+    // The default ProjectManager object
+    static var `default`: ProjectManager = {
+        print("Default")
+        return ProjectManager()
+    }()
+    
+    
     // Firebase
     let db = Firestore.firestore()
     private var listener: ListenerRegistration? {
@@ -37,7 +44,6 @@ class ProjectManager {
     private var projectOrder = [String]()
     
     
-    
     let userDefaults = UserDefaults.standard
     
     // Project Directory Path
@@ -46,9 +52,6 @@ class ProjectManager {
     let sharedProjectPath = "/User/UserID/SharedProject"
     
     init() {
-        let settings = db.settings
-        settings.areTimestampsInSnapshotsEnabled = true
-        db.settings = settings
         
         inbox = Project(projectID: "InBox", projectName: "InBox", projectDirPath: defaultProjectPath)
         projectDic[inbox.projectPath] = inbox

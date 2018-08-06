@@ -16,7 +16,7 @@ protocol LeftModelDelegate: class {
 
 class LeftModel {
     
-    var projectManager = ProjectManager()
+    var projectManager = ProjectManager.default
     
     // Delegate
     weak var delegate: LeftModelDelegate?

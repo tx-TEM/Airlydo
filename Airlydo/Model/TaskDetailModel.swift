@@ -16,8 +16,7 @@ protocol TaskDetailModelDelegate: class {
 class TaskDetailModel {
     
     var theTask: Task
-    var projectList = [Project]()
-    var projectDic = [String: Project]()  // [ProjectPath: Project]
+    var projectManager = ProjectManager.default
 
     
     // Page Status
@@ -31,25 +30,11 @@ class TaskDetailModel {
         self.pageTitle = "Add Task"
     }
     
-    init(projects: [Project], projectDic: [String:Project]) {
-        theTask = Task()
-        self.projectList = projects
-        self.projectDic = projectDic
-        self.pageTitle = "Add Task"
-    }
-    
-    init(task: Task, projects: [Project], projectDic: [String:Project]) {
+    init(task: Task) {
         theTask = task  //document ID has been setted
-        self.projectList = projects
-        self.projectDic = projectDic
         self.pageTitle = "Edit Task"
     }
     
-    // get ProjectName
-    func getProjectName(projectPath: String) -> String {
-        let projName = self.projectDic[projectPath]?.projectName ?? "Read Error"
-        return projName
-    }
     
     // save
     func saveTask(formTaskName: String, formNote: String, formDueDate: Date,

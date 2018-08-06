@@ -11,6 +11,12 @@ import Firebase
 
 class TaskManager {
     
+    // The default TaskManager object
+    static var `default`: TaskManager = {
+        print("Default")
+        return TaskManager()
+    }()
+    
     // Firebase
     let db = Firestore.firestore()
     private var listener: ListenerRegistration? {
@@ -21,19 +27,15 @@ class TaskManager {
     
     var taskList = [Task]()
     
-    init() {
-        let settings = db.settings
-        settings.areTimestampsInSnapshotsEnabled = true
-        db.settings = settings
-    }
-    
-    
     // load Tasks from cloud
     func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping () -> ()){
         
         self.taskList = []
         self.listener = db.collection(projectPath + "/Task")
-            .whereField("isArchive", isEqualTo: isArchiveMode).addSnapshotListener { querySnapshot, error in
+            .whereField("isArchive", isEqualTo: isArchiveMode)
+            //.order(by: "dueDate", descending: true)
+            //.order(by: "priority", descending: true)
+            .addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
                 print("Error fetching snapshots: \(error!)")
                 return

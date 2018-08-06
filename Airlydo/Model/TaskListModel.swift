@@ -16,7 +16,7 @@ protocol TaskListModelDelegate: class {
 
 class TaskListModel {
     
-    var taskManager = TaskManager()
+    var taskManager = TaskManager.default
     
     // Page Status
     var pageTitle = "All"
@@ -26,6 +26,11 @@ class TaskListModel {
     
     var sortProperties = [SortDescriptor(keyPath: "dueDate", ascending: true),
                           SortDescriptor(keyPath: "priority", ascending: true) ]
+    
+    enum SortOptions: String {
+        case dueDate = "dueDate"
+        case priority = "priority"
+    }
     
     
     // Date Formatter

@@ -82,7 +82,7 @@ class TaskDetailViewController: FormViewController {
                 let projPath = taskDetailModel!.theTask.projectPath
                 
                 if projPath != "" {
-                    $0.value = taskDetailModel!.getProjectName(projectPath: projPath)
+                    $0.value = taskDetailModel?.projectManager.getProjectDic[projPath]?.projectName
                     formProjectPath = projPath
                 }else{
                     $0.value = "InBox"
@@ -97,7 +97,7 @@ class TaskDetailViewController: FormViewController {
                                                        preferredStyle: .actionSheet)
                     
                     // Add Action
-                    if let projectList = self.taskDetailModel?.projectList {
+                    if let projectList = self.taskDetailModel?.projectManager.getProjectList() {
                         
                         for data in projectList {
                             controller.addAction(UIAlertAction(title: data.projectName, style: .default, handler: {

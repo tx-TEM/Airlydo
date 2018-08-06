@@ -27,11 +27,9 @@ class TaskListViewController: UIViewController {
     @IBAction func addTaskButtonTapped(_ sender: UIButton) {
 
         let leftViewController = self.slideMenuController()?.leftViewController as! LeftViewController
-        let projectDic = leftViewController.leftModel.getProjectDic()
-        let projectList = leftViewController.leftModel.getProjectList()
         
         let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
-        TaskDetailViewController.taskDetailModel = TaskDetailModel(projects: projectList, projectDic: projectDic) // Set new Task
+        TaskDetailViewController.taskDetailModel = TaskDetailModel() // Set new Task
         self.navigationController?.pushViewController(TaskDetailViewController, animated: true)
     }
     
@@ -221,8 +219,7 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
         
         // push view
         let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
-        TaskDetailViewController.taskDetailModel = TaskDetailModel(task: taskListModel.get(index: indexPath.row),
-                                                                   projects: projectList, projectDic: projectDic)
+        TaskDetailViewController.taskDetailModel = TaskDetailModel(task: taskListModel.get(index: indexPath.row))
         self.navigationController?.pushViewController(TaskDetailViewController, animated: true)
         
     }
