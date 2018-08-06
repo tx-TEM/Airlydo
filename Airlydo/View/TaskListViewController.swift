@@ -25,8 +25,6 @@ class TaskListViewController: UIViewController {
     
     
     @IBAction func addTaskButtonTapped(_ sender: UIButton) {
-
-        let leftViewController = self.slideMenuController()?.leftViewController as! LeftViewController
         
         let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
         TaskDetailViewController.taskDetailModel = TaskDetailModel() // Set new Task
@@ -172,12 +170,10 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
             
             
             if let cell = cell, let indexPath = tableView.indexPath(for: cell) {
-                print(self?.taskListModel.get(index: indexPath.row).dueDate)
                 // Genarate Repeat Task
                 if(self?.taskListModel.get(index: indexPath.row).howRepeat != 3){
                     self?.taskListModel.genRepeatask(index: indexPath.row)
                 }
-                print(self?.taskListModel.get(index: indexPath.row).dueDate)
                 
                 // Remove Task
                 self?.taskListModel.deleteTask(index: indexPath.row)
@@ -212,11 +208,7 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
         
         // deselect
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let leftViewController = self.slideMenuController()?.leftViewController as! LeftViewController
-        let projectDic = leftViewController.leftModel.getProjectDic()
-        let projectList = leftViewController.leftModel.getProjectList()
-        
+                
         // push view
         let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
         TaskDetailViewController.taskDetailModel = TaskDetailModel(task: taskListModel.get(index: indexPath.row))

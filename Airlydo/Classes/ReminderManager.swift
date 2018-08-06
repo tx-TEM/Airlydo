@@ -14,11 +14,6 @@ class ReminderManager {
     let db = Firestore.firestore()
     var reminderList = [Reminder]()
     
-    init() {
-        let settings = db.settings
-        settings.areTimestampsInSnapshotsEnabled = true
-        db.settings = settings
-    }
     
     // load Reminder from cloud
     func loadData(parentTask: Task ,completed: @escaping () -> ()) {
