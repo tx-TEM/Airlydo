@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>752419583646-ae3pu6kofgd5v8ktbvni21lg2rpmalvs.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.752419583646-ae3pu6kofgd5v8ktbvni21lg2rpmalvs</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCi-Lc0HBtC653NXIp6x6DnF_SCP0svZzE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>752419583646</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.Airlydo.AirlyIO</string>
+	<key>PROJECT_ID</key>
+	<string>airlydo-1530102776029</string>
+	<key>STORAGE_BUCKET</key>
+	<string>airlydo-1530102776029.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:752419583646:ios:6b655ac436f09a07</string>
+	<key>DATABASE_URL</key>
+	<string>https://airlydo-1530102776029.firebaseio.com</string>
+</dict>
+</plist>
