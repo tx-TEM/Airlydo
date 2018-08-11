@@ -6,7 +6,6 @@
 //  Copyright © 2018年 yoshiki-t. All rights reserved.
 //
 
-import Foundation
 import Firebase
 
 class ProjectManager {
