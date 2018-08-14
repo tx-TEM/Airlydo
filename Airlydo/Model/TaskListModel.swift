@@ -11,6 +11,7 @@ import RealmSwift
 
 protocol TaskListModelDelegate: class {
     func tasksDidChange()
+    func insertTask(Index: Int)
     func errorDidOccur(error: Error)
 }
 
@@ -41,10 +42,22 @@ class TaskListModel {
     
     init() {
         self.nowProject = Project() //InBox
-        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completed: {
-            self.delegate?.tasksDidChange()
-        })
         
+        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completed: { inserts, isFirst in
+            
+            print(inserts)
+            print(isFirst)
+            
+            if (isFirst) {
+                self.delegate?.tasksDidChange()
+            } else {
+                for index in inserts {
+                    self.delegate?.insertTask(Index: index)
+                }
+            }
+ 
+        })
+ 
         // Date Formatter
         dateFormatter.locale = Locale.current
         dateFormatter.timeZone = TimeZone.ReferenceType.local
@@ -63,11 +76,23 @@ class TaskListModel {
     
     func changeProject(selectedProjcet: Project) {
         
-        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completed: {
+        self.pageTitle = self.isArchiveMode ? selectedProjcet.projectName + " <Archive>" : selectedProjcet.projectName
+        self.nowProject = selectedProjcet
+        self.isAllTask = false
+        
+        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completed: { inserts, isFirst in
             
-            self.pageTitle = self.isArchiveMode ? selectedProjcet.projectName + " <Archive>" : selectedProjcet.projectName
-            self.nowProject = selectedProjcet
-            self.isAllTask = false
+            print(inserts)
+            print(isFirst)
+            
+            if (isFirst) {
+                self.delegate?.tasksDidChange()
+            } else {
+                for index in inserts {
+                    self.delegate?.insertTask(Index: index)
+                }
+            }
+            
         })
     }
     

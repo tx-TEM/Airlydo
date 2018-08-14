@@ -26,54 +26,64 @@ class TaskManager {
     }
     
     var taskList = [Task]()
+    var loadCount = 0
     
     // load Tasks from cloud
-    func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping () -> ()){
+    func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping ([Int], Bool) -> ()){
         
         self.taskList = []
+        self.loadCount = 0
+        
         self.listener = db.collection(projectPath + "/Task")
             .whereField("isArchive", isEqualTo: isArchiveMode)
             //.order(by: "dueDate", descending: true)
             //.order(by: "priority", descending: true)
             .addSnapshotListener { querySnapshot, error in
-            guard let snapshot = querySnapshot else {
-                print("Error fetching snapshots: \(error!)")
-                return
-            }
-            
-            for diff in snapshot.documentChanges {
-                
-                let tempTask = Task(dictionary: diff.document.data(), taskID: diff.document.documentID,
-                                    projectPath: projectPath)
-                
-                if (diff.type == .added) {
-
-                    self.taskList.append(tempTask)
-                    print("New: \(tempTask.taskName + "," + tempTask.taskID)")
+                guard let snapshot = querySnapshot else {
+                    print("Error fetching snapshots: \(error!)")
+                    return
                 }
                 
-                if (diff.type == .modified) {
+                var inserts = [Int]()
+                
+                for (index, diff) in snapshot.documentChanges.enumerated() {
                     
-                    if let taskIndex = self.taskList.index(of: tempTask) {
-                        self.taskList.remove(at: taskIndex)
+                    let tempTask = Task(dictionary: diff.document.data(), taskID: diff.document.documentID,
+                                        projectPath: projectPath)
+                    
+                    if (diff.type == .added) {
+                        
+                        self.taskList.insert(tempTask, at: index)
+                        inserts.append(index)
+                        print("New: \(tempTask.taskName + "," + tempTask.taskID)")
                     }
                     
-                    self.taskList.append(tempTask)
-                    print("Modified: \(tempTask.taskName)")
-                }
-                
-                if (diff.type == .removed) {
-
-                    if let taskIndex = self.taskList.index(of: tempTask) {
-                        self.taskList.remove(at: taskIndex)
+                    if (diff.type == .modified) {
+                        
+                        if let taskIndex = self.taskList.index(of: tempTask) {
+                            self.taskList.remove(at: taskIndex)
+                        }
+                        
+                        self.taskList.append(tempTask)
+                        print("Modified: \(tempTask.taskName)")
                     }
-                    print("Removed: \(tempTask.taskName)")
+                    
+                    if (diff.type == .removed) {
+                        
+                        if let taskIndex = self.taskList.index(of: tempTask) {
+                            self.taskList.remove(at: taskIndex)
+                        }
+                        print("Removed: \(tempTask.taskName)")
+                    }
                 }
-            }
-            
-            let source = snapshot.metadata.isFromCache ? "local cache" : "server"
-            print("Metadata: Data fetched from \(source)")
-            completed()
+                let isFirst = (self.loadCount == 0)
+                self.loadCount += 1
+                
+                let source = snapshot.metadata.isFromCache ? "local cache" : "server"
+                print("Metadata: Data fetched from \(source)")
+                
+                
+                completed(inserts, isFirst)
         }
     }
     

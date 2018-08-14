@@ -106,6 +106,10 @@ extension TaskListViewController: TaskListModelDelegate {
         TaskCellTable.reloadData()
     }
     
+    func insertTask(Index: Int) {
+        self.TaskCellTable.insertRows(at: [IndexPath(row: Index, section: 0)], with: .fade)
+    }
+    
     func errorDidOccur(error: Error) {
         print(error.localizedDescription)
     }
@@ -143,12 +147,6 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.defaultColor = .lightGray
         cell.firstTrigger = 0.1;
         cell.secondTrigger = 0.4
-        
-        // setup
-        // cell.selectionStyle = .none
-        // cell.textLabel?.text = dataList[indexPath.row]
-        // cell.detailTextLabel?.text = "details..."
-        // cell.detailTextLabel?.textColor = .lightGray
         
         
         cell.setSwipeGestureWith(UIImageView(image: UIImage(named: "check")), color: UIColor.green, mode: .exit, state: .state1, completionBlock: { [weak self] (cell, state, mode) in
