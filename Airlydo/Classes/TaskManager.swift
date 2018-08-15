@@ -41,7 +41,6 @@ class TaskManager {
     // load Tasks from cloud
     func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping (TableUpdateInfo) -> ()){
         
-        self.taskList = []
         self.loadCount = 0
         
         self.listener = db.collection(projectPath + "/Task")
@@ -54,47 +53,54 @@ class TaskManager {
                     return
                 }
                 
+                var tempTaskList = [Task]()
                 var tableUpdateInfo = TableUpdateInfo()
                 
-                for (index, diff) in snapshot.documentChanges.enumerated() {
+                // update TaskList
+                for document in snapshot.documents {
+                    let tempTask = Task(dictionary: document.data(), taskID: document.documentID, projectPath: projectPath)
+                    tempTaskList.append(tempTask)
+                }
+                
+                // get index of diff
+                for diff in snapshot.documentChanges {
                     
                     let tempTask = Task(dictionary: diff.document.data(), taskID: diff.document.documentID,
                                         projectPath: projectPath)
                     
+                    
                     if (diff.type == .added) {
                         
-                        self.taskList.insert(tempTask, at: index)
-                        tableUpdateInfo.insert.append(index)
+                        if let index = tempTaskList.index(of: tempTask) {
+                            tableUpdateInfo.insert.append(index)
+                            print("New: \(tempTask.taskName + "," + tempTask.taskID)")
+                        }
                         
-                        print("New: \(tempTask.taskName + "," + tempTask.taskID)")
                     }
                     
                     if (diff.type == .modified) {
                         
-                        if let taskIndex = self.taskList.index(of: tempTask) {
-                            self.taskList.remove(at: taskIndex)
+                        if let index = tempTaskList.index(of: tempTask) {
+                            tableUpdateInfo.modify.append(index)
+                            print("Modified: \(tempTask.taskName)")
                         }
-                        
-                        self.taskList.append(tempTask)
-                        print("Modified: \(tempTask.taskName)")
                     }
                     
                     if (diff.type == .removed) {
-                        
-                        if let taskIndex = self.taskList.index(of: tempTask) {
-                            self.taskList.remove(at: taskIndex)
+                        if let index = self.taskList.index(of: tempTask) {
                             tableUpdateInfo.remove.append(index)
+                            print("Removed: \(tempTask.taskName)")
                         }
-                        
-                        print("Removed: \(tempTask.taskName)")
                     }
+                    
                 }
+                self.taskList = tempTaskList
+                
                 tableUpdateInfo.isFirst = (self.loadCount == 0)
                 self.loadCount += 1
                 
                 let source = snapshot.metadata.isFromCache ? "local cache" : "server"
                 print("Metadata: Data fetched from \(source)")
-                
                 
                 completed(tableUpdateInfo)
         }
