@@ -12,6 +12,7 @@ import RealmSwift
 protocol TaskListModelDelegate: class {
     func tasksDidChange()
     func insertTask(Index: Int)
+    func removeTask(Index: Int)
     func errorDidOccur(error: Error)
 }
 
@@ -43,9 +44,9 @@ class TaskListModel {
     init() {
         self.nowProject = Project() //InBox
         
-        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completed: { insert, remove, isFirst in
+        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completed: { tableUpdateInfo in
             
-            if (isFirst) {
+            if (tableUpdateInfo.isFirst) {
                 
                 // initialize Table
                 self.delegate?.tasksDidChange()
@@ -53,17 +54,17 @@ class TaskListModel {
             } else {
                 
                 // remove
-                for index in remove {
-                    //self.delegate?.removeTask(Index: index)
+                for index in tableUpdateInfo.remove {
+                    self.delegate?.removeTask(Index: index)
                 }
                 
                 // insert
-                for index in insert {
+                for index in tableUpdateInfo.insert {
                     self.delegate?.insertTask(Index: index)
                 }
                 
                 // modify
-                //for index in modify {
+                //for index in tableUpdateInfo.modify {
                 //    self.delegate?.insertTask(Index: index)
                 //}
             
@@ -93,18 +94,22 @@ class TaskListModel {
         self.nowProject = selectedProjcet
         self.isAllTask = false
         
-        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completed: { insert, remove, isFirst in
+        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completed: { tableUpdateInfo in
             
-            print(insert)
-            print(isFirst)
-            
-            if (isFirst) {
-                self.delegate?.tasksDidChange()
-            } else {
-                for index in insert {
-                    self.delegate?.insertTask(Index: index)
-                }
+            // remove
+            for index in tableUpdateInfo.remove {
+                //self.delegate?.removeTask(Index: index)
             }
+            
+            // insert
+            for index in tableUpdateInfo.insert {
+                self.delegate?.insertTask(Index: index)
+            }
+            
+            // modify
+            //for index in tableUpdateInfo.modify {
+            //    self.delegate?.insertTask(Index: index)
+            //}
             
         })
     }

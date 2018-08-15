@@ -22,7 +22,9 @@ class TaskListViewController: UIViewController {
     
     
     let taskListModel = TaskListModel()
-    
+    var cellHeight = 100.0
+    var cellClose = [Int]()
+
     
     @IBAction func addTaskButtonTapped(_ sender: UIButton) {
         
@@ -89,7 +91,8 @@ class TaskListViewController: UIViewController {
     // reload Page
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        TaskCellTable.reloadData()
+        //print("reload")
+        //TaskCellTable.reloadData()
     }
 
 
@@ -108,10 +111,43 @@ extension TaskListViewController: TaskListModelDelegate {
     
     func insertTask(Index: Int) {
         self.TaskCellTable.insertRows(at: [IndexPath(row: Index, section: 0)], with: .fade)
+        tableAnimation(Index: Index)
+    }
+    
+    func removeTask(Index: Int) {
+        self.TaskCellTable.deleteRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
     }
     
     func errorDidOccur(error: Error) {
         print(error.localizedDescription)
+    }
+    
+    func tableAnimation(Index: Int) {
+        
+        // set cell height = 0
+        self.cellClose.append(Index)
+        
+        // Animation
+        let theCell = self.TaskCellTable.cellForRow(at: IndexPath(row: Index, section: 0)) as! TaskCell
+        
+        UIView.animateKeyframes(withDuration: 1.5, delay: 0, options: [], animations: {
+            
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5, animations: {
+                self.TaskCellTable.beginUpdates()
+                self.cellClose.remove(at: self.cellClose.index(of: Index)!)
+                self.TaskCellTable.endUpdates()
+                theCell.layoutIfNeeded()
+            })
+            
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.3, animations: {
+                theCell.backgroundColor = UIColor.blue
+            })
+            
+            UIView.addKeyframe(withRelativeStartTime: 1.3, relativeDuration: 0.2, animations: {
+                theCell.backgroundColor = UIColor.white
+            })
+            
+        }, completion: nil)
     }
 }
 
@@ -128,7 +164,11 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
     
     // return cell height (px)
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        if (self.cellClose.contains(indexPath.row)) {
+            return 0
+        } else {
+            return 100
+        }
     }
     
     // create new cell
@@ -161,7 +201,7 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
                 // Send the Task to Archive
                 self?.taskListModel.archiveTask(index: indexPath.row)
             }
-            self?.TaskCellTable.reloadData()
+            //self?.TaskCellTable.reloadData()
         })
         
         cell.setSwipeGestureWith(UIImageView(image: UIImage(named: "fav")), color: UIColor.blue, mode: .exit, state: .state2, completionBlock: { [weak self] (cell, state, mode) in

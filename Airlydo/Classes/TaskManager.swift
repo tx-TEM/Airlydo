@@ -9,6 +9,16 @@
 import Foundation
 import Firebase
 
+struct TableUpdateInfo {
+    // need initialize: true
+    var isFirst = true
+    
+    // for call table.insertRow or ...
+    var insert = [Int]()
+    var remove = [Int]()
+    var modify = [Int]()
+}
+
 class TaskManager {
     
     // The default TaskManager object
@@ -29,7 +39,7 @@ class TaskManager {
     var loadCount = 0
     
     // load Tasks from cloud
-    func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping ([Int], [Int], Bool) -> ()){
+    func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping (TableUpdateInfo) -> ()){
         
         self.taskList = []
         self.loadCount = 0
@@ -44,8 +54,7 @@ class TaskManager {
                     return
                 }
                 
-                var insert = [Int]()
-                var remove = [Int]()
+                var tableUpdateInfo = TableUpdateInfo()
                 
                 for (index, diff) in snapshot.documentChanges.enumerated() {
                     
@@ -55,7 +64,8 @@ class TaskManager {
                     if (diff.type == .added) {
                         
                         self.taskList.insert(tempTask, at: index)
-                        insert.append(index)
+                        tableUpdateInfo.insert.append(index)
+                        
                         print("New: \(tempTask.taskName + "," + tempTask.taskID)")
                     }
                     
@@ -73,19 +83,20 @@ class TaskManager {
                         
                         if let taskIndex = self.taskList.index(of: tempTask) {
                             self.taskList.remove(at: taskIndex)
+                            tableUpdateInfo.remove.append(index)
                         }
-                        remove.append(index)
+                        
                         print("Removed: \(tempTask.taskName)")
                     }
                 }
-                let isFirst = (self.loadCount == 0)
+                tableUpdateInfo.isFirst = (self.loadCount == 0)
                 self.loadCount += 1
                 
                 let source = snapshot.metadata.isFromCache ? "local cache" : "server"
                 print("Metadata: Data fetched from \(source)")
                 
                 
-                completed(insert, remove, isFirst)
+                completed(tableUpdateInfo)
         }
     }
     
