@@ -42,6 +42,7 @@ class TaskManager {
     func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping (TableUpdateInfo) -> ()){
         
         self.loadCount = 0
+        print(projectPath + "/Task")
         
         self.listener = db.collection(projectPath + "/Task")
             .whereField("isArchive", isEqualTo: isArchiveMode)

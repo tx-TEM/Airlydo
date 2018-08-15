@@ -96,20 +96,29 @@ class TaskListModel {
         
         self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completed: { tableUpdateInfo in
             
-            // remove
-            for index in tableUpdateInfo.remove {
-                //self.delegate?.removeTask(Index: index)
+            if (tableUpdateInfo.isFirst) {
+                
+                // initialize Table
+                self.delegate?.tasksDidChange()
+                
+            } else {
+                
+                // remove
+                for index in tableUpdateInfo.remove {
+                    self.delegate?.removeTask(Index: index)
+                }
+                
+                // insert
+                for index in tableUpdateInfo.insert {
+                    self.delegate?.insertTask(Index: index)
+                }
+                
+                // modify
+                //for index in tableUpdateInfo.modify {
+                //    self.delegate?.insertTask(Index: index)
+                //}
+                
             }
-            
-            // insert
-            for index in tableUpdateInfo.insert {
-                self.delegate?.insertTask(Index: index)
-            }
-            
-            // modify
-            //for index in tableUpdateInfo.modify {
-            //    self.delegate?.insertTask(Index: index)
-            //}
             
         })
     }

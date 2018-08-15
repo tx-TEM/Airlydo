@@ -179,11 +179,11 @@ extension LeftViewController: UITableViewDelegate, UITableViewDataSource {
                 case 0:
                     TaskListViewController.taskListModel.changeProject(selectedProjcet: self.leftModel.getInBox())
                 case 1:
-                    TaskListViewController.taskListModel.changeProject()
+                    TaskListViewController.taskListModel.changeProject(selectedProjcet: self.leftModel.getInBox())
                 case 2:
-                    TaskListViewController.taskListModel.changeProject()
+                    TaskListViewController.taskListModel.changeProject(selectedProjcet: self.leftModel.getInBox())
                 default:
-                    TaskListViewController.taskListModel.changeProject()
+                    TaskListViewController.taskListModel.changeProject(selectedProjcet: self.leftModel.getInBox())
                 }
                 
             }else{
