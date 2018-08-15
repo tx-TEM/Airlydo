@@ -29,7 +29,7 @@ class TaskManager {
     var loadCount = 0
     
     // load Tasks from cloud
-    func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping ([Int], Bool) -> ()){
+    func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping ([Int], [Int], Bool) -> ()){
         
         self.taskList = []
         self.loadCount = 0
@@ -44,7 +44,8 @@ class TaskManager {
                     return
                 }
                 
-                var inserts = [Int]()
+                var insert = [Int]()
+                var remove = [Int]()
                 
                 for (index, diff) in snapshot.documentChanges.enumerated() {
                     
@@ -54,7 +55,7 @@ class TaskManager {
                     if (diff.type == .added) {
                         
                         self.taskList.insert(tempTask, at: index)
-                        inserts.append(index)
+                        insert.append(index)
                         print("New: \(tempTask.taskName + "," + tempTask.taskID)")
                     }
                     
@@ -73,6 +74,7 @@ class TaskManager {
                         if let taskIndex = self.taskList.index(of: tempTask) {
                             self.taskList.remove(at: taskIndex)
                         }
+                        remove.append(index)
                         print("Removed: \(tempTask.taskName)")
                     }
                 }
@@ -83,7 +85,7 @@ class TaskManager {
                 print("Metadata: Data fetched from \(source)")
                 
                 
-                completed(inserts, isFirst)
+                completed(insert, remove, isFirst)
         }
     }
     

@@ -92,13 +92,12 @@ class TaskDetailViewController: FormViewController {
                 
                 }.onCellSelection{ cell, row in
                     
-                    let controller = UIAlertController(title: "List",
+                    let controller = UIAlertController(title: "Project",
                                                        message: nil,
                                                        preferredStyle: .actionSheet)
                     
                     // Add Action
                     if let projectList = self.taskDetailModel?.projectManager.getProjectList() {
-                        
                         for data in projectList {
                             controller.addAction(UIAlertAction(title: data.projectName, style: .default, handler: {
                                 (action: UIAlertAction!) -> Void in

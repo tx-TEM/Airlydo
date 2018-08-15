@@ -40,8 +40,8 @@ class ProjectManager {
     }
     
     // [custom & shared Project] Order
-    private var projectOrder = [String]()
-    
+    //private var projectOrder = [String]()
+    var projectOrder = [String]()
     
     let userDefaults = UserDefaults.standard
     
@@ -51,7 +51,7 @@ class ProjectManager {
     let sharedProjectPath = "/User/UserID/SharedProject"
     
     init() {
-        
+        print("init proM")
         inbox = Project(projectID: "InBox", projectName: "InBox", projectDirPath: defaultProjectPath)
         projectDic[inbox.projectPath] = inbox
         
@@ -94,6 +94,7 @@ class ProjectManager {
                     }
                 }
                 
+                print(self.projectOrder)
             }
             
             // remove projectkeys that has been erased by the other device
@@ -122,7 +123,10 @@ class ProjectManager {
     
     // read Project Order form UserDefault
     func readOrder() {
+        print("readOrder")
+        print(self.projectOrder)
         self.projectOrder = userDefaults.object(forKey: "ProjectOrder") as? [String] ?? []
+        print(self.projectOrder)
     }
     
     // save Project order to UserDefault
@@ -138,9 +142,8 @@ class ProjectManager {
             let newProject = Project(projectName: projectName, projectDirPath: self.customProjectPath)
             
             newProject.saveData { newProjectPath in
-                if newProjectPath != "" {
-                    self.projectOrder.append(newProjectPath)
-                    self.saveOrder(order: self.projectOrder)
+                if newProjectPath == "" {
+                    print("failed to save Project")
                 }
             }
         }

@@ -20,7 +20,7 @@ class TaskListModel {
     var taskManager = TaskManager.default
     
     // Page Status
-    var pageTitle = "All"
+    var pageTitle = "InBox"
     var isArchiveMode = false
     private var isAllTask = false
     private var nowProject: Project?
@@ -43,17 +43,30 @@ class TaskListModel {
     init() {
         self.nowProject = Project() //InBox
         
-        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completed: { inserts, isFirst in
-            
-            print(inserts)
-            print(isFirst)
+        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completed: { insert, remove, isFirst in
             
             if (isFirst) {
+                
+                // initialize Table
                 self.delegate?.tasksDidChange()
+                
             } else {
-                for index in inserts {
+                
+                // remove
+                for index in remove {
+                    //self.delegate?.removeTask(Index: index)
+                }
+                
+                // insert
+                for index in insert {
                     self.delegate?.insertTask(Index: index)
                 }
+                
+                // modify
+                //for index in modify {
+                //    self.delegate?.insertTask(Index: index)
+                //}
+            
             }
  
         })
@@ -80,15 +93,15 @@ class TaskListModel {
         self.nowProject = selectedProjcet
         self.isAllTask = false
         
-        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completed: { inserts, isFirst in
+        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completed: { insert, remove, isFirst in
             
-            print(inserts)
+            print(insert)
             print(isFirst)
             
             if (isFirst) {
                 self.delegate?.tasksDidChange()
             } else {
-                for index in inserts {
+                for index in insert {
                     self.delegate?.insertTask(Index: index)
                 }
             }
