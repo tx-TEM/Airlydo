@@ -18,7 +18,7 @@ class TaskDetailViewController: FormViewController {
     var taskDetailModel: TaskDetailModel?
     
     var recvVal: String = ""
-    var formProjectPath: String = "/User/user1/DefaultProject/InBox"
+    var formProjectPath: String = ""
     
     @IBAction func SaveTaskButtonTapped(_ sender: UIButton) {
         let valuesDictionary = form.values()
@@ -86,7 +86,7 @@ class TaskDetailViewController: FormViewController {
                     formProjectPath = projPath
                 }else{
                     $0.value = "InBox"
-                    formProjectPath = "/User/user1/DefaultProject/InBox"
+                    formProjectPath = (taskDetailModel?.projectManager.projectDirPath.defaultProjectPath)! + "/InBox"
                 }
  
                 

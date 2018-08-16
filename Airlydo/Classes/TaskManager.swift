@@ -23,7 +23,6 @@ class TaskManager {
     
     // The default TaskManager object
     static var `default`: TaskManager = {
-        print("Default")
         return TaskManager()
     }()
     

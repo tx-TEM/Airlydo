@@ -8,11 +8,31 @@
 
 import Firebase
 
+struct ProjectDirPath {
+    
+    // Path
+    let defaultProjectPath: String
+    let customProjectPath: String
+    let sharedProjectPath: String
+    
+    init() {
+        if let cUser = Auth.auth().currentUser {
+            
+            defaultProjectPath = "/User/" + cUser.uid + "/DefaultProject"
+            customProjectPath = "/User/" + cUser.uid + "/CustomProject"
+            sharedProjectPath = "/User/" + cUser.uid + "/SharedProject"
+        } else {
+            defaultProjectPath = "/User/user1/DefaultProject"
+            customProjectPath = "/User/user1/CustomProject"
+            sharedProjectPath = "/User/user1/SharedProject"
+        }
+    }
+}
+
 class ProjectManager {
     
     // The default ProjectManager object
     static var `default`: ProjectManager = {
-        print("Default")
         return ProjectManager()
     }()
     
@@ -45,14 +65,10 @@ class ProjectManager {
     
     let userDefaults = UserDefaults.standard
     
-    // Project Directory Path
-    let defaultProjectPath = "/User/user1/DefaultProject"
-    let customProjectPath = "/User/user1/CustomProject"
-    let sharedProjectPath = "/User/UserID/SharedProject"
+    let projectDirPath = ProjectDirPath()
     
     init() {
-        print("init proM")
-        inbox = Project(projectID: "InBox", projectName: "InBox", projectDirPath: defaultProjectPath)
+        inbox = Project(projectID: "InBox", projectName: "InBox", projectDirPath: projectDirPath.defaultProjectPath)
         projectDic[inbox.projectPath] = inbox
         
         readOrder()
@@ -62,7 +78,7 @@ class ProjectManager {
     func loadData(completion: @escaping () -> ()){
         
         // load CustomProject
-        db.collection(customProjectPath).addSnapshotListener { querySnapshot, error in
+        db.collection(projectDirPath.customProjectPath).addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
                 print("Error fetching snapshots: \(error!)")
                 return
@@ -71,10 +87,10 @@ class ProjectManager {
             for diff in snapshot.documentChanges {
                 if (diff.type == .added || diff.type == .modified) {
                     print("New or Modified: \(diff.document.data())")
-                    let tempProjPath = self.customProjectPath + "/" + diff.document.documentID
+                    let tempProjPath = self.projectDirPath.customProjectPath + "/" + diff.document.documentID
                     
                     let tempProj = Project(dictionary: diff.document.data(), projectID: diff.document.documentID,
-                                           projectDirPath: self.customProjectPath)
+                                           projectDirPath: self.projectDirPath.customProjectPath)
                     
                     self.projectDic[tempProjPath] = tempProj
 
@@ -85,7 +101,7 @@ class ProjectManager {
                 
                 if (diff.type == .removed) {
                     print("Removed: \(diff.document.data())")
-                    let tempProjPath = self.customProjectPath + "/" + diff.document.documentID
+                    let tempProjPath = self.projectDirPath.customProjectPath + "/" + diff.document.documentID
                     
                     self.projectDic.removeValue(forKey: tempProjPath)
                     
@@ -139,7 +155,7 @@ class ProjectManager {
     func add(projectName: String) {
         
         if(!(projectName.isEmpty)) {
-            let newProject = Project(projectName: projectName, projectDirPath: self.customProjectPath)
+            let newProject = Project(projectName: projectName, projectDirPath: self.projectDirPath.customProjectPath)
             
             newProject.saveData { newProjectPath in
                 if newProjectPath == "" {
