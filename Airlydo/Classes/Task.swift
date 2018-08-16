@@ -86,7 +86,7 @@ class Task {
                   reminderList: reminderList, howRepeat: howRepeat, priority: priority, projectPath: projectPath)
     }
     
-    func saveData(completed: @escaping (Bool) -> ()) {
+    func saveData(completion: @escaping (Bool) -> ()) {
         // Firebase
         let db = Firestore.firestore()
         
@@ -96,9 +96,9 @@ class Task {
             db.collection(self.projectPath + "/Task").document(self.taskID).setData(dataToSave) { err in
                 if let err = err {
                     print("Error adding document: \(err)")
-                    completed(false)
+                    completion(false)
                 } else {
-                    completed(true)
+                    completion(true)
                 }
             }
             
@@ -107,10 +107,10 @@ class Task {
             ref = db.collection(self.projectPath + "/Task").addDocument(data: dataToSave) { err in
                 if let err = err {
                     print("Error writing document: \(err)")
-                    completed(false)
+                    completion(false)
                 } else {
                     self.taskID = ref!.documentID
-                    completed(true)
+                    completion(true)
                 }
             }
         }

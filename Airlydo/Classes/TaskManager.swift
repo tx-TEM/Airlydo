@@ -39,7 +39,7 @@ class TaskManager {
     var loadCount = 0
     
     // load Tasks from cloud
-    func loadData(projectPath: String, isArchiveMode: Bool, completed: @escaping (TableUpdateInfo) -> ()){
+    func loadData(projectPath: String, isArchiveMode: Bool, completion: @escaping (TableUpdateInfo) -> ()){
         
         self.loadCount = 0
         print(projectPath + "/Task")
@@ -103,7 +103,7 @@ class TaskManager {
                 let source = snapshot.metadata.isFromCache ? "local cache" : "server"
                 print("Metadata: Data fetched from \(source)")
                 
-                completed(tableUpdateInfo)
+                completion(tableUpdateInfo)
         }
     }
     

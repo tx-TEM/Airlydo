@@ -48,7 +48,7 @@ class Project {
         self.init(projectID: projectID, projectName: projectName, projectDirPath: projectDirPath)
     }
     
-    func saveData(completed: @escaping (String) -> ()) {
+    func saveData(completion: @escaping (String) -> ()) {
         // Firebase
         let db = Firestore.firestore()
         
@@ -59,10 +59,10 @@ class Project {
             db.collection(projectDirPath).document(projectID).setData(dataToSave) { err in
                 if let err = err {
                     print("Error adding document: \(err)")
-                    completed("")
+                    completion("")
                 } else {
                     print("Document Modified with ID: \(self.projectID)")
-                    completed(self.projectPath)
+                    completion(self.projectPath)
                 }
             }
             
@@ -71,11 +71,11 @@ class Project {
             ref = db.collection(projectDirPath).addDocument(data: dataToSave) { err in
                 if let err = err {
                     print("Error writing document: \(err)")
-                    completed("")
+                    completion("")
                 } else {
                     print("Document added with ID: \(ref!.documentID)")
                     self.projectID = ref!.documentID
-                    completed(self.projectPath)
+                    completion(self.projectPath)
                 }
             }
         }

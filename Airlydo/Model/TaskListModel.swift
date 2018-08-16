@@ -44,7 +44,7 @@ class TaskListModel {
     init() {
         self.nowProject = Project() //InBox
         
-        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completed: { tableUpdateInfo in
+        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completion: { tableUpdateInfo in
             
             if (tableUpdateInfo.isFirst) {
                 
@@ -94,7 +94,7 @@ class TaskListModel {
         self.nowProject = selectedProjcet
         self.isAllTask = false
         
-        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completed: { tableUpdateInfo in
+        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completion: { tableUpdateInfo in
             
             if (tableUpdateInfo.isFirst) {
                 

@@ -59,7 +59,7 @@ class ProjectManager {
     }
     
     // load Projects from cloud
-    func loadData(completed: @escaping () -> ()){
+    func loadData(completion: @escaping () -> ()){
         
         // load CustomProject
         db.collection(customProjectPath).addSnapshotListener { querySnapshot, error in
@@ -109,7 +109,7 @@ class ProjectManager {
             print("Metadata: Data fetched from \(source)")
             self.saveOrder(order: self.projectOrder)
             print(self.projectOrder)
-            completed()
+            completion()
         }
         
         // load SharedProject
