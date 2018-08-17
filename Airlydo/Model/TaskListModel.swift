@@ -20,6 +20,9 @@ class TaskListModel {
     
     var taskManager = TaskManager.default
     
+    // UITable
+    var numberOfRows = 0
+    
     // Page Status
     var pageTitle = "InBox"
     var isArchiveMode = false
@@ -49,17 +52,22 @@ class TaskListModel {
             if (tableUpdateInfo.isFirst) {
                 
                 // initialize Table
+                self.numberOfRows = self.taskManager.count()
                 self.delegate?.tasksDidChange()
                 
             } else {
                 
                 // remove
                 for index in tableUpdateInfo.remove {
+                    print(index)
+                    self.numberOfRows -= 1
                     self.delegate?.removeTask(Index: index)
+                    print("remove")
                 }
                 
                 // insert
                 for index in tableUpdateInfo.insert {
+                    self.numberOfRows += 1
                     self.delegate?.insertTask(Index: index)
                 }
                 
@@ -201,7 +209,7 @@ class TaskListModel {
     }
     
     func count() -> Int {
-        return taskManager.taskList.count
+        return self.numberOfRows
     }
     
     func get(index: Int) -> Task {

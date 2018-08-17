@@ -97,6 +97,9 @@ class TaskManager {
                 self.taskList = tempTaskList
                 
                 tableUpdateInfo.isFirst = (self.loadCount == 0)
+                tableUpdateInfo.remove.reverse()
+                print(tableUpdateInfo.remove)
+                
                 self.loadCount += 1
                 
                 let source = snapshot.metadata.isFromCache ? "local cache" : "server"
