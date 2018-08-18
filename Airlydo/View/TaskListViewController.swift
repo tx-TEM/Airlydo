@@ -91,7 +91,6 @@ class TaskListViewController: UIViewController {
     // reload Page
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //print("reload")
         //TaskCellTable.reloadData()
     }
 
@@ -110,7 +109,7 @@ extension TaskListViewController: TaskListModelDelegate {
     }
     
     func insertTask(Index: Int) {
-        self.TaskCellTable.insertRows(at: [IndexPath(row: Index, section: 0)], with: .fade)
+        self.TaskCellTable.insertRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
         tableAnimation(Index: Index)
     }
     
@@ -124,31 +123,29 @@ extension TaskListViewController: TaskListModelDelegate {
     
     func tableAnimation(Index: Int) {
         
-        // set cell height = 0
-        self.cellClose.append(Index)
-        
-        // Animation
         let theCell = self.TaskCellTable.cellForRow(at: IndexPath(row: Index, section: 0)) as! TaskCell
         
-        UIView.animateKeyframes(withDuration: 1.5, delay: 0, options: [], animations: {
+        // set cell_height = 0
+        self.cellClose.append(Index)
+        
+        // color : initial val = blue
+        theCell.backgroundColor = UIColor.blue
+        
+        // Animation
+        UIView.animate(withDuration: 2.5, delay: 0.0, options: [], animations: {
+            self.TaskCellTable.beginUpdates()
+            self.cellClose.remove(at: self.cellClose.index(of: Index)!)
+            self.TaskCellTable.endUpdates()
+            theCell.layoutIfNeeded()
             
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5, animations: {
-                self.TaskCellTable.beginUpdates()
-                self.cellClose.remove(at: self.cellClose.index(of: Index)!)
-                self.TaskCellTable.endUpdates()
-                theCell.layoutIfNeeded()
-            })
-            
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 1.3, animations: {
-                theCell.backgroundColor = UIColor.blue
-            })
-            
-            UIView.addKeyframe(withRelativeStartTime: 1.3, relativeDuration: 0.2, animations: {
+        }, completion: { _ in
+            UIView.animate(withDuration: 2.5, delay: 1.0, options: [], animations: {
                 theCell.backgroundColor = UIColor.white
-            })
-            
-        }, completion: nil)
+                
+            }, completion: nil)
+        })
     }
+    
 }
 
 extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {

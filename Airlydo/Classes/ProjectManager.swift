@@ -113,13 +113,6 @@ class ProjectManager {
                 print(self.projectOrder)
             }
             
-            // remove projectkeys that has been erased by the other device
-            let projectKeys = [String](self.projectDic.keys)
-            for (index, key) in self.projectOrder.enumerated() {
-                if !(projectKeys.contains(key)) {
-                    self.projectOrder.remove(at: index)
-                }
-            }
             
             let source = snapshot.metadata.isFromCache ? "local cache" : "server"
             print("Metadata: Data fetched from \(source)")
