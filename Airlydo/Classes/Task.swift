@@ -61,7 +61,6 @@ class Task {
         self.projectPath = projectPath
     }
     
-    
     // For firestore
     convenience init(dictionary: [String: Any], taskID: String, projectPath: String) {
         let taskName = dictionary["taskName"] as! String? ?? ""

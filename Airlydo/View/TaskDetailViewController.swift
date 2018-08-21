@@ -9,7 +9,6 @@
 
 import UIKit
 import Eureka
-import RealmSwift
 
 class TaskDetailViewController: FormViewController {
     
@@ -35,6 +34,7 @@ class TaskDetailViewController: FormViewController {
             }
         }
         
+        self.navigationController?.popViewController(animated: true)
         
         taskDetailModel?.saveTask(formTaskName: valuesDictionary["TitleTag"] as! String,
                                   formNote: valuesDictionary["NoteTag"] as! String,
@@ -42,11 +42,13 @@ class TaskDetailViewController: FormViewController {
                                   formReminderList: formRemindList,
                                   formHowRepeat: valuesDictionary["RepeatTag"] as! String,
                                   formPriority: valuesDictionary["PriorityTag"] as! String,
-                                  formProjectPath: formProjectPath)
+                                  formProjectPath: formProjectPath,
+                                  completion: {
+                                    
+                                    self.taskDetailModel = nil
+        })
         
         
-        
-        self.navigationController?.popViewController(animated: true)
     }
     
     func updateNote(note: String){
@@ -88,7 +90,7 @@ class TaskDetailViewController: FormViewController {
                     $0.value = "InBox"
                     formProjectPath = (taskDetailModel?.projectManager.projectDirPath.defaultProjectPath)! + "/InBox"
                 }
- 
+                
                 
                 }.onCellSelection{ cell, row in
                     
@@ -224,5 +226,8 @@ class TaskDetailViewController: FormViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    deinit {
+        print("call DetailPage deinit")
+    }
 }
 

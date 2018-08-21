@@ -35,10 +35,14 @@ class TaskDetailModel {
         self.pageTitle = "Edit Task"
     }
     
+    deinit {
+        print("call Detail Model deinit")
+    }
+    
     
     // save
-    func saveTask(formTaskName: String, formNote: String, formDueDate: Date,
-                  formReminderList: [Date], formHowRepeat: String, formPriority: String, formProjectPath: String) {
+    func saveTask(formTaskName: String, formNote: String, formDueDate: Date,formReminderList: [Date],
+                  formHowRepeat: String, formPriority: String, formProjectPath: String, completion: @escaping () -> ()) {
         
         // dueDate -> 11:59:59
         let calendar = Calendar.current
@@ -69,6 +73,8 @@ class TaskDetailModel {
                 }
                 
             }
+            
+            completion()
         }
     }
     

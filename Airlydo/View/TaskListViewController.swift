@@ -180,7 +180,6 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.AssignLabel.text = "自分"
         cell.DateLabel.text = taskListModel.dueDateToString(dueDate: theTask.dueDate)
         
-        //cell.label.text = dataList[indexPath.row]
         cell.defaultColor = .lightGray
         cell.firstTrigger = 0.1;
         cell.secondTrigger = 0.4
