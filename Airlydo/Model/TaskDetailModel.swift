@@ -8,11 +8,6 @@
 
 import Foundation
 
-protocol TaskDetailModelDelegate: class {
-    func listDidChange()
-    func errorDidOccur(error: Error)
-}
-
 class TaskDetailModel {
     
     var theTask: Task
@@ -22,8 +17,6 @@ class TaskDetailModel {
     // Page Status
     var pageTitle = "Add Task"
     
-    // Delegate
-    weak var delegate: TaskDetailModelDelegate?
     
     init() {
         theTask = Task()
@@ -35,14 +28,10 @@ class TaskDetailModel {
         self.pageTitle = "Edit Task"
     }
     
-    deinit {
-        print("call Detail Model deinit")
-    }
-    
     
     // save
-    func saveTask(formTaskName: String, formNote: String, formDueDate: Date,formReminderList: [Date],
-                  formHowRepeat: String, formPriority: String, formProjectPath: String, completion: @escaping () -> ()) {
+    func saveTask(formTaskName: String, formNote: String, formDueDate: Date,
+                  formReminderList: [Date],formHowRepeat: String, formPriority: String, formProjectPath: String) {
         
         // dueDate -> 11:59:59
         let calendar = Calendar.current
@@ -71,11 +60,9 @@ class TaskDetailModel {
                     self.theTask.projectPath = oldProjectPath
                     self.theTask.delete()
                 }
-                
             }
-            
-            completion()
         }
+        
     }
     
     // Check ReminderList

@@ -42,12 +42,7 @@ class TaskDetailViewController: FormViewController {
                                   formReminderList: formRemindList,
                                   formHowRepeat: valuesDictionary["RepeatTag"] as! String,
                                   formPriority: valuesDictionary["PriorityTag"] as! String,
-                                  formProjectPath: formProjectPath,
-                                  completion: {
-                                    
-                                    self.taskDetailModel = nil
-        })
-        
+                                  formProjectPath: formProjectPath)
         
     }
     
@@ -73,7 +68,12 @@ class TaskDetailViewController: FormViewController {
             <<< LabelRow("NoteTag"){
                 $0.title = "Note"
                 $0.value = taskDetailModel?.theTask.note
-                }.onCellSelection{ cell, row in
+                }.onCellSelection{ [weak self] cell, row in
+                    
+                    guard let `self` = self else {
+                        return
+                    }
+                    
                     let SetNotePageController = self.storyboard?.instantiateViewController(withIdentifier: "SetNotePageController") as! SetNotePageController
                     SetNotePageController.noteValue = row.value
                     self.navigationController?.pushViewController(SetNotePageController, animated: true)
@@ -92,11 +92,16 @@ class TaskDetailViewController: FormViewController {
                 }
                 
                 
-                }.onCellSelection{ cell, row in
+                }.onCellSelection{ [weak self] cell, row in
+                    
+                    guard let `self` = self else {
+                        return
+                    }
                     
                     let controller = UIAlertController(title: "Project",
                                                        message: nil,
                                                        preferredStyle: .actionSheet)
+                    
                     
                     // Add Action
                     if let projectList = self.taskDetailModel?.projectManager.getProjectList() {
@@ -226,8 +231,5 @@ class TaskDetailViewController: FormViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    deinit {
-        print("call DetailPage deinit")
-    }
 }
 
