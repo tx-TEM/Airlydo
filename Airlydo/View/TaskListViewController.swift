@@ -139,7 +139,7 @@ extension TaskListViewController: TaskListModelDelegate {
             theCell.layoutIfNeeded()
             
         }, completion: { _ in
-            UIView.animate(withDuration: 2.5, delay: 1.0, options: [], animations: {
+            UIView.animate(withDuration: 2.5, delay: 0.0, options: [], animations: {
                 theCell.backgroundColor = UIColor.white
                 
             }, completion: nil)

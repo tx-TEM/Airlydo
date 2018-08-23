@@ -50,6 +50,7 @@ class TaskListModel {
         taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completion: { tableUpdateInfo in
             
             if (tableUpdateInfo.isFirst) {
+                print("reload")
                 
                 // initialize Table
                 self.numberOfRows = self.taskManager.count()
@@ -67,6 +68,7 @@ class TaskListModel {
                 
                 // insert
                 for index in tableUpdateInfo.insert {
+                    print(index)
                     self.numberOfRows += 1
                     self.delegate?.insertTask(Index: index)
                 }

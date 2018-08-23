@@ -34,15 +34,22 @@ class TaskDetailViewController: FormViewController {
             }
         }
         
-        self.navigationController?.popViewController(animated: true)
         
-        taskDetailModel?.saveTask(formTaskName: valuesDictionary["TitleTag"] as! String,
-                                  formNote: valuesDictionary["NoteTag"] as! String,
-                                  formDueDate: valuesDictionary["DueDateTag"] as! Date,
-                                  formReminderList: formRemindList,
-                                  formHowRepeat: valuesDictionary["RepeatTag"] as! String,
-                                  formPriority: valuesDictionary["PriorityTag"] as! String,
-                                  formProjectPath: formProjectPath)
+        CATransaction.begin()
+        self.navigationController?.popViewController(animated: true)
+        CATransaction.setCompletionBlock({
+            
+            self.taskDetailModel?.saveTask(formTaskName: valuesDictionary["TitleTag"] as! String,
+                                      formNote: valuesDictionary["NoteTag"] as! String,
+                                      formDueDate: valuesDictionary["DueDateTag"] as! Date,
+                                      formReminderList: formRemindList,
+                                      formHowRepeat: valuesDictionary["RepeatTag"] as! String,
+                                      formPriority: valuesDictionary["PriorityTag"] as! String,
+                                      formProjectPath: self.formProjectPath)
+            print("closure")
+        })
+        CATransaction.commit()
+        print("animation?")
         
     }
     
