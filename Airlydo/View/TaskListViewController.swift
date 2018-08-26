@@ -57,14 +57,14 @@ class TaskListViewController: UIViewController {
         // Add Action
         controller.addAction(UIAlertAction(title: "dueDate", style: .default, handler:{
             (action: UIAlertAction!) -> Void in
-            self.taskListModel.changeSortOption(sortProperties:[SortDescriptor(keyPath: "dueDate", ascending: true),
-                                                                SortDescriptor(keyPath: "priority", ascending: true) ])
+            self.taskListModel.changeSortOption(sortDescriptors: SortDescriptors(firstOption: NSSortDescriptor(key: "dueDate", ascending: false),
+                                                                                secondOption: NSSortDescriptor(key: "priority", ascending: false)))
         }))
         
         controller.addAction(UIAlertAction(title: "Priority", style: .default, handler:{
             (action: UIAlertAction!) -> Void in
-            self.taskListModel.changeSortOption(sortProperties:[SortDescriptor(keyPath: "priority", ascending: true),
-                                                                SortDescriptor(keyPath: "dueDate", ascending: true) ])
+            self.taskListModel.changeSortOption(sortDescriptors: SortDescriptors(firstOption: NSSortDescriptor(key: "priority", ascending: false),
+                                                                                 secondOption: NSSortDescriptor(key: "dueDate", ascending: false)))
         }))
         
         

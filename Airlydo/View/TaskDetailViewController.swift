@@ -34,7 +34,7 @@ class TaskDetailViewController: FormViewController {
             }
         }
         
-        
+        // Save Task
         CATransaction.begin()
         self.navigationController?.popViewController(animated: true)
         CATransaction.setCompletionBlock({
@@ -46,11 +46,8 @@ class TaskDetailViewController: FormViewController {
                                       formHowRepeat: valuesDictionary["RepeatTag"] as! String,
                                       formPriority: valuesDictionary["PriorityTag"] as! String,
                                       formProjectPath: self.formProjectPath)
-            print("closure")
         })
         CATransaction.commit()
-        print("animation?")
-        
     }
     
     func updateNote(note: String){

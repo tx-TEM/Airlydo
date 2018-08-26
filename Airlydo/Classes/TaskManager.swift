@@ -28,6 +28,7 @@ class TaskManager {
     
     // Firebase
     let db = Firestore.firestore()
+    
     private var listener: ListenerRegistration? {
         didSet {
             oldValue?.remove()
@@ -38,15 +39,21 @@ class TaskManager {
     var loadCount = 0
     
     // load Tasks from cloud
-    func loadData(projectPath: String, isArchiveMode: Bool, completion: @escaping (TableUpdateInfo) -> ()){
+    func loadData(projectPath: String, sortDescriptors: SortDescriptors, isArchiveMode: Bool, completion: @escaping (TableUpdateInfo) -> ()){
+        
+        guard let firstKey = sortDescriptors.firstOption.key,
+              let secondKey = sortDescriptors.secondOption.key else {
+                
+            return
+        }
         
         self.loadCount = 0
         print(projectPath + "/Task")
         
         self.listener = db.collection(projectPath + "/Task")
             .whereField("isArchive", isEqualTo: isArchiveMode)
-            //.order(by: "dueDate", descending: true)
-            //.order(by: "priority", descending: true)
+            .order(by: firstKey, descending: sortDescriptors.firstOption.ascending)
+            .order(by: secondKey, descending: sortDescriptors.secondOption.ascending)
             .addSnapshotListener { querySnapshot, error in
                 guard let snapshot = querySnapshot else {
                     print("Error fetching snapshots: \(error!)")

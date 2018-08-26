@@ -16,6 +16,16 @@ protocol TaskListModelDelegate: class {
     func errorDidOccur(error: Error)
 }
 
+struct SortDescriptors {
+    var firstOption: NSSortDescriptor
+    var secondOption: NSSortDescriptor
+    
+    init(firstOption: NSSortDescriptor, secondOption: NSSortDescriptor) {
+        self.firstOption = firstOption
+        self.secondOption = secondOption
+    }
+}
+
 class TaskListModel {
     
     var taskManager = TaskManager.default
@@ -29,14 +39,8 @@ class TaskListModel {
     private var isAllTask = false
     private var nowProject: Project?
     
-    var sortProperties = [SortDescriptor(keyPath: "dueDate", ascending: true),
-                          SortDescriptor(keyPath: "priority", ascending: true) ]
-    
-    enum SortOptions: String {
-        case dueDate = "dueDate"
-        case priority = "priority"
-    }
-    
+    var sortDescriptors = SortDescriptors(firstOption: NSSortDescriptor(key: "dueDate", ascending: false),
+                                          secondOption: NSSortDescriptor(key: "priority", ascending: false))
     
     // Date Formatter
     let dateFormatter = DateFormatter()
@@ -47,10 +51,10 @@ class TaskListModel {
     init() {
         self.nowProject = Project() //InBox
         
-        taskManager.loadData(projectPath: (nowProject?.projectPath)!, isArchiveMode: isArchiveMode, completion: { tableUpdateInfo in
+        taskManager.loadData(projectPath: (nowProject?.projectPath)!, sortDescriptors: sortDescriptors,
+                             isArchiveMode: isArchiveMode, completion: { tableUpdateInfo in
             
             if (tableUpdateInfo.isFirst) {
-                print("reload")
                 
                 // initialize Table
                 self.numberOfRows = self.taskManager.count()
@@ -104,10 +108,10 @@ class TaskListModel {
         self.nowProject = selectedProjcet
         self.isAllTask = false
         
-        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, isArchiveMode: isArchiveMode, completion: { tableUpdateInfo in
+        self.taskManager.loadData(projectPath: selectedProjcet.projectPath, sortDescriptors: sortDescriptors,
+                                  isArchiveMode: isArchiveMode, completion: { tableUpdateInfo in
             
             if (tableUpdateInfo.isFirst) {
-                print("reload")
                 
                 // initialize Table
                 self.numberOfRows = self.taskManager.count()
@@ -120,12 +124,10 @@ class TaskListModel {
                     print(index)
                     self.numberOfRows -= 1
                     self.delegate?.removeTask(Index: index)
-                    print("remove")
                 }
                 
                 // insert
                 for index in tableUpdateInfo.insert {
-                    print(index)
                     self.numberOfRows += 1
                     self.delegate?.insertTask(Index: index)
                 }
@@ -150,8 +152,8 @@ class TaskListModel {
     }
     
     // Change Sort Option
-    func changeSortOption(sortProperties: [SortDescriptor]) {
-        self.sortProperties = sortProperties
+    func changeSortOption(sortDescriptors: SortDescriptors) {
+        self.sortDescriptors = sortDescriptors
         self.changeProjectOld()
     }
     
