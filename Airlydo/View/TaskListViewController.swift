@@ -117,6 +117,10 @@ extension TaskListViewController: TaskListModelDelegate {
         self.TaskCellTable.deleteRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
     }
     
+    func updateTask(Index: Int) {
+        self.TaskCellTable.reloadRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
+    }
+    
     func errorDidOccur(error: Error) {
         print(error.localizedDescription)
     }

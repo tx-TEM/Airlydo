@@ -60,13 +60,13 @@ class TaskManager {
                     return
                 }
                 
-                var tempTaskList = [Task]()
+                var newTaskList = [Task]()
                 var tableUpdateInfo = TableUpdateInfo()
                 
                 // update TaskList
                 for document in snapshot.documents {
                     let tempTask = Task(dictionary: document.data(), taskID: document.documentID, projectPath: projectPath)
-                    tempTaskList.append(tempTask)
+                    newTaskList.append(tempTask)
                 }
                 
                 // get index of diff
@@ -78,30 +78,49 @@ class TaskManager {
                     
                     if (diff.type == .added) {
                         
-                        if let index = tempTaskList.index(of: tempTask) {
-                            tableUpdateInfo.insert.append(index)
-                            print("New: \(tempTask.taskName + "," + tempTask.taskID)")
+                        guard let index = newTaskList.index(of: tempTask) else {
+                                return
                         }
+                        
+                        tableUpdateInfo.insert.append(index)
+                        print("New: \(tempTask.taskName + "," + tempTask.taskID)")
                         
                     }
                     
                     if (diff.type == .modified) {
                         
-                        if let index = tempTaskList.index(of: tempTask) {
-                            tableUpdateInfo.modify.append(index)
-                            print("Modified: \(tempTask.taskName)")
+                        guard let oldIndex = self.taskList.index(of: tempTask),
+                              let newIndex = newTaskList.index(of: tempTask) else {
+                                return
                         }
+                        
+                        // don't need Move
+                        if oldIndex == newIndex {
+                            tableUpdateInfo.modify.append(newIndex)
+                            
+                        } else {
+                            tableUpdateInfo.remove.append(oldIndex)
+                            tableUpdateInfo.insert.append(newIndex)
+                        }
+                        
+                        print("Modified: \(tempTask.taskName)")
+                        
                     }
                     
                     if (diff.type == .removed) {
-                        if let index = self.taskList.index(of: tempTask) {
-                            tableUpdateInfo.remove.append(index)
-                            print("Removed: \(tempTask.taskName)")
+                        
+                        guard let index = self.taskList.index(of: tempTask) else {
+                            return
                         }
+                        
+                        tableUpdateInfo.remove.append(index)
+                        print("Removed: \(tempTask.taskName)")
                     }
                     
                 }
-                self.taskList = tempTaskList
+                
+                // update taslList
+                self.taskList = newTaskList
                 
                 tableUpdateInfo.isFirst = (self.loadCount == 0)
                 tableUpdateInfo.remove.reverse()

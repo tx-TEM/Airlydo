@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import RealmSwift
 
 protocol TaskListModelDelegate: class {
     func tasksDidChange()
     func insertTask(Index: Int)
     func removeTask(Index: Int)
+    func updateTask(Index: Int)
     func errorDidOccur(error: Error)
 }
 
@@ -78,9 +78,9 @@ class TaskListModel {
                 }
                 
                 // modify
-                //for index in tableUpdateInfo.modify {
-                //    self.delegate?.insertTask(Index: index)
-                //}
+                for index in tableUpdateInfo.modify {
+                    self.delegate?.updateTask(Index: index)
+                }
             
             }
  
@@ -133,9 +133,9 @@ class TaskListModel {
                 }
                 
                 // modify
-                //for index in tableUpdateInfo.modify {
-                //    self.delegate?.insertTask(Index: index)
-                //}
+                for index in tableUpdateInfo.modify {
+                    self.delegate?.updateTask(Index: index)
+                }
             }
             
         })
