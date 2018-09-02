@@ -78,7 +78,7 @@ class ProjectManager {
     func loadData(completion: @escaping () -> ()){
         
         // load CustomProject
-        db.collection(projectDirPath.customProjectPath).addSnapshotListener { querySnapshot, error in
+        self.listener = db.collection(projectDirPath.customProjectPath).addSnapshotListener { querySnapshot, error in
             guard let snapshot = querySnapshot else {
                 print("Error fetching snapshots: \(error!)")
                 return

@@ -49,43 +49,10 @@ class TaskListModel {
     weak var delegate: TaskListModelDelegate?
     
     init() {
-        self.nowProject = Project() //InBox
         
-        taskManager.loadData(projectPath: (nowProject?.projectPath)!, sortDescriptors: sortDescriptors,
-                             isArchiveMode: isArchiveMode, completion: { tableUpdateInfo in
-            
-            if (tableUpdateInfo.isFirst) {
-                
-                // initialize Table
-                self.numberOfRows = self.taskManager.count()
-                self.delegate?.tasksDidChange()
-                
-            } else {
-                
-                // remove
-                for index in tableUpdateInfo.remove {
-                    print(index)
-                    self.numberOfRows -= 1
-                    self.delegate?.removeTask(Index: index)
-                    print("remove")
-                }
-                
-                // insert
-                for index in tableUpdateInfo.insert {
-                    print(index)
-                    self.numberOfRows += 1
-                    self.delegate?.insertTask(Index: index)
-                }
-                
-                // modify
-                for index in tableUpdateInfo.modify {
-                    self.delegate?.updateTask(Index: index)
-                }
-            
-            }
- 
-        })
- 
+        // Open InBox
+        self.changeProject(selectedProjcet: Project())
+        
         // Date Formatter
         dateFormatter.locale = Locale.current
         dateFormatter.timeZone = TimeZone.ReferenceType.local
@@ -93,7 +60,31 @@ class TaskListModel {
     }
     
     
+    // Get number of UITable Rows
+    func count() -> Int {
+        return self.numberOfRows
+    }
+    
+    // Get Task
+    func get(index: Int) -> Task {
+        return taskManager.get(index: index)
+    }
+    
+    // Delete Task
+    func delete(index: Int) {
+        taskManager.get(index: index).delete()
+    }
+    
+    
+    // Send the task to archive
+    func archive(index: Int) {
+        taskManager.get(index: index).archive()
+    }
+    
+    
     // Change Display Tasks
+    
+    /* Change All Project
     func changeProject() {
         //self.tasks = taskManager.readAllData(isArchiveMode: isArchiveMode, sortProperties: sortProperties)
         self.isAllTask = true
@@ -101,6 +92,7 @@ class TaskListModel {
         delegate?.tasksDidChange()
         self.nowProject = nil
     }
+    */
     
     func changeProject(selectedProjcet: Project) {
         
@@ -111,33 +103,9 @@ class TaskListModel {
         self.taskManager.loadData(projectPath: selectedProjcet.projectPath, sortDescriptors: sortDescriptors,
                                   isArchiveMode: isArchiveMode, completion: { tableUpdateInfo in
             
-            if (tableUpdateInfo.isFirst) {
-                
-                // initialize Table
-                self.numberOfRows = self.taskManager.count()
-                self.delegate?.tasksDidChange()
-                
-            } else {
-                
-                // remove
-                for index in tableUpdateInfo.remove {
-                    print(index)
-                    self.numberOfRows -= 1
-                    self.delegate?.removeTask(Index: index)
-                }
-                
-                // insert
-                for index in tableUpdateInfo.insert {
-                    self.numberOfRows += 1
-                    self.delegate?.insertTask(Index: index)
-                }
-                
-                // modify
-                for index in tableUpdateInfo.modify {
-                    self.delegate?.updateTask(Index: index)
-                }
-            }
-            
+            // Update Table
+            self.differentialUpdate(tableUpdateInfo: tableUpdateInfo)
+
         })
     }
     
@@ -146,7 +114,7 @@ class TaskListModel {
             changeProject(selectedProjcet: nowProj)
         } else {
             if(isAllTask) {
-                changeProject()
+                //changeProject()
             }
         }
     }
@@ -157,44 +125,40 @@ class TaskListModel {
         self.changeProjectOld()
     }
     
-    // Date to String using Formatter
-    func dueDateToString(dueDate: Date)-> String {
-        return dateFormatter.string(from: dueDate)
-    }
-    
-    // Delete Task
-    func deleteTask(index: Int) {
-        taskManager.get(index: index).delete()
+    // Differential update of TaskList Table
+    private func differentialUpdate(tableUpdateInfo: TableUpdateInfo) {
         
-    }
-    
-    // Send the task to archive
-    func archiveTask(index: Int) {
-        taskManager.get(index: index).archive()
-
-    }
-    
-    // Get the Time of after Repeat Calc
-    func calcRepeatTime(date: Date, howRepeat: Int)-> Date {
-        let calendar = Calendar.current
-        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
-
-        switch howRepeat {
-        // 毎月
-        case 0:
-            components.month = components.month! + 1
-        // 毎週
-        case 1:
-            components.day = components.day! + 7
-        // 毎日
-        case 2:
-            components.day = components.day! + 1
-        default:
-            components.day = components.day! + 1
+        if (tableUpdateInfo.isFirst) {
+            
+            // initialize Table
+            self.numberOfRows = self.taskManager.count()
+            self.delegate?.tasksDidChange()
+            
+        } else {
+            
+            // remove
+            for index in tableUpdateInfo.remove {
+                print(index)
+                self.numberOfRows -= 1
+                self.delegate?.removeTask(Index: index)
+                print("remove")
+            }
+            
+            // insert
+            for index in tableUpdateInfo.insert {
+                print(index)
+                self.numberOfRows += 1
+                self.delegate?.insertTask(Index: index)
+            }
+            
+            // modify
+            for index in tableUpdateInfo.modify {
+                self.delegate?.updateTask(Index: index)
+            }
+            
         }
-        
-        return calendar.date(from: components)!
     }
+    
     
     // Generate Repeat Task
     func genRepeatask(index: Int) {
@@ -218,19 +182,31 @@ class TaskListModel {
         }
     }
     
-    func count() -> Int {
-        return self.numberOfRows
+    // Get the Time of after Repeat Calc
+    private func calcRepeatTime(date: Date, howRepeat: Int)-> Date {
+        let calendar = Calendar.current
+        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        
+        switch howRepeat {
+        // 毎月
+        case 0:
+            components.month = components.month! + 1
+        // 毎週
+        case 1:
+            components.day = components.day! + 7
+        // 毎日
+        case 2:
+            components.day = components.day! + 1
+        default:
+            components.day = components.day! + 1
+        }
+        
+        return calendar.date(from: components)!
     }
     
-    func get(index: Int) -> Task {
-        return taskManager.get(index: index)
+    // Date to String using Formatter
+    func dueDateToString(dueDate: Date)-> String {
+        return dateFormatter.string(from: dueDate)
     }
-    
-    func delete(index: Int) {
-        taskManager.get(index: index).delete()
-    }
-    
-    func archive(index: Int) {
-        taskManager.get(index: index).archive()
-    }
+
 }

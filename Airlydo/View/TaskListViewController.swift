@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 import MCSwipeTableViewCell
 import SlideMenuControllerSwift
 import Firebase
@@ -88,10 +87,8 @@ class TaskListViewController: UIViewController {
 
     }
     
-    // reload Page
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        //TaskCellTable.reloadData()
     }
 
 
@@ -105,19 +102,23 @@ class TaskListViewController: UIViewController {
 extension TaskListViewController: TaskListModelDelegate {
     func tasksDidChange() {
         self.navigationItem.title = self.taskListModel.pageTitle
+        print("reload")
         TaskCellTable.reloadData()
     }
     
     func insertTask(Index: Int) {
+        print("insert")
         self.TaskCellTable.insertRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
         tableAnimation(Index: Index)
     }
     
     func removeTask(Index: Int) {
+        print("remove")
         self.TaskCellTable.deleteRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
     }
     
     func updateTask(Index: Int) {
+        print("update")
         self.TaskCellTable.reloadRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
     }
     
@@ -127,7 +128,9 @@ extension TaskListViewController: TaskListModelDelegate {
     
     func tableAnimation(Index: Int) {
         
-        let theCell = self.TaskCellTable.cellForRow(at: IndexPath(row: Index, section: 0)) as! TaskCell
+        guard let theCell: TaskCell = self.TaskCellTable.cellForRow(at: IndexPath(row: Index, section: 0)) as? TaskCell else {
+            return
+        }
         
         // set cell_height = 0
         self.cellClose.append(Index)
@@ -174,11 +177,12 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
     
     // create new cell
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "TaskPage_TaskCell", for: indexPath) as! TaskCell
         
         let theTask = taskListModel.get(index: indexPath.row)
         
-        // Configure the cell...
+        // Configure the cell
         cell.TaskTitleLabel.text = theTask.taskName
         cell.TaskInfoLabel.text = theTask.note
         cell.AssignLabel.text = "自分"
@@ -189,6 +193,7 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.secondTrigger = 0.4
         
         
+        // Set Swipe Action
         cell.setSwipeGestureWith(UIImageView(image: UIImage(named: "check")), color: UIColor.green, mode: .exit, state: .state1, completionBlock: { [weak self] (cell, state, mode) in
             
             
@@ -199,45 +204,27 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 
                 // Send the Task to Archive
-                self?.taskListModel.archiveTask(index: indexPath.row)
+                self?.taskListModel.archive(index: indexPath.row)
             }
             //self?.TaskCellTable.reloadData()
         })
         
         cell.setSwipeGestureWith(UIImageView(image: UIImage(named: "fav")), color: UIColor.blue, mode: .exit, state: .state2, completionBlock: { [weak self] (cell, state, mode) in
             
+            guard let cell = cell, let indexPath = tableView.indexPath(for: cell) else {
+                return
+            }
             
-            if let cell = cell, let indexPath = tableView.indexPath(for: cell) {
-                // Genarate Repeat Task
-                if(self?.taskListModel.get(index: indexPath.row).howRepeat != 3){
-                    self?.taskListModel.genRepeatask(index: indexPath.row)
-                }
+            // Genarate Repeat Task
+            if(self?.taskListModel.get(index: indexPath.row).howRepeat != 3){
+                self?.taskListModel.genRepeatask(index: indexPath.row)
+            }
                 
-                // Remove Task
-                self?.taskListModel.deleteTask(index: indexPath.row)
-            }
+            // Delete Task
+            self?.taskListModel.delete(index: indexPath.row)
         })
         
-        cell.setSwipeGestureWith(UIImageView(image: UIImage(named: "check")), color: UIColor.green, mode: .exit, state: .state3, completionBlock: { [weak self] (cell, state, mode) in
-            
-            
-            if let cell = cell, let indexPath = tableView.indexPath(for: cell) {
-                //self?.dataList.remove(at: indexPath.row)
-                // 該当のセルを削除
-                //self?.tableView.deleteRows(at: [indexPath], with: .fade)
-            }
-        })
-        
-        cell.setSwipeGestureWith(UIImageView(image: UIImage(named: "check")), color: UIColor.yellow, mode: .exit, state: .state4, completionBlock: { [weak self] (cell, state, mode) in
-            
-            
-            if let cell = cell, let indexPath = tableView.indexPath(for: cell) {
-                //self?.dataList.remove(at: indexPath.row)
-                // 該当のセルを削除
-                //self?.tableView.deleteRows(at: [indexPath], with: .fade)
-            }
-        })
-        
+
         return cell
     }
     
@@ -248,7 +235,10 @@ extension TaskListViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
                 
         // push view
-        let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
+        guard let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as? TaskDetailViewController else {
+            return
+        }
+        
         TaskDetailViewController.taskDetailModel = TaskDetailModel(task: taskListModel.get(index: indexPath.row))
         self.navigationController?.pushViewController(TaskDetailViewController, animated: true)
         

@@ -10,7 +10,7 @@ import Foundation
 import Firebase
 
 struct TableUpdateInfo {
-    // need initialize: true
+    // need initialize Table: true
     var isFirst = true
     
     // for call table.insertRow or ...

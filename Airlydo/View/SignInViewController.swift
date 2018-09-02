@@ -56,13 +56,12 @@ extension SignInViewController : GIDSignInDelegate {
                 // ...
                 return
             }
-            // User is signed in
             
+            // User is signed in
+            let ContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "ContainerViewController") as! ContainerViewController
+            self.present(ContainerViewController, animated: true, completion: nil)
         }
-        
-        let ContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "ContainerViewController") as! ContainerViewController
-        self.present(ContainerViewController, animated: true, completion: nil)
-
+    
     }
     
     func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!,
