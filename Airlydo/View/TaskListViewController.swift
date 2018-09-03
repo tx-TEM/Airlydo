@@ -112,17 +112,20 @@ extension TaskListViewController: TaskListModelDelegate {
     func insertTask(Index: Int) {
         print("insert")
         self.TaskCellTable.insertRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
+        self.TaskCellTable.scrollToRow(at: IndexPath(row: Index, section: 0), at: UITableViewScrollPosition.none, animated: true)
         tableAnimation(Index: Index)
     }
     
     func removeTask(Index: Int) {
         print("remove")
+        self.TaskCellTable.scrollToRow(at: IndexPath(row: Index, section: 0), at: UITableViewScrollPosition.none, animated: true)
         self.TaskCellTable.deleteRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
     }
     
     func updateTask(Index: Int) {
         print("update")
-        self.TaskCellTable.reloadRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
+        self.TaskCellTable.scrollToRow(at: IndexPath(row: Index, section: 0), at: UITableViewScrollPosition.none, animated: true)
+        self.TaskCellTable.reloadRows(at: [IndexPath(row: Index, section: 0)], with: .fade)
     }
     
     func errorDidOccur(error: Error) {

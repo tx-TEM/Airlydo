@@ -40,12 +40,12 @@ class TaskDetailViewController: FormViewController {
         CATransaction.setCompletionBlock({
             
             self.taskDetailModel?.saveTask(formTaskName: valuesDictionary["TitleTag"] as! String,
-                                      formNote: valuesDictionary["NoteTag"] as! String,
-                                      formDueDate: valuesDictionary["DueDateTag"] as! Date,
-                                      formReminderList: formRemindList,
-                                      formHowRepeat: valuesDictionary["RepeatTag"] as! String,
-                                      formPriority: valuesDictionary["PriorityTag"] as! String,
-                                      formProjectPath: self.formProjectPath)
+                                           formNote: valuesDictionary["NoteTag"] as! String,
+                                           formDueDate: valuesDictionary["DueDateTag"] as! Date,
+                                           formReminderList: formRemindList,
+                                           formHowRepeat: valuesDictionary["RepeatTag"] as! String,
+                                           formPriority: valuesDictionary["PriorityTag"] as! String,
+                                           formProjectPath: self.formProjectPath)
         })
         CATransaction.commit()
     }
@@ -150,25 +150,24 @@ class TaskDetailViewController: FormViewController {
         
         
         
-        form +++ MultivaluedSection(multivaluedOptions: [.Reorder, .Insert, .Delete],
-                                    header: "Reminder") {
-                                        $0.addButtonProvider = { section in
-                                            return ButtonRow(){
-                                                $0.title = "Add"
-                                            }
-                                        }
-                                        $0.multivaluedRowToInsertAt = { index in
-                                            return DateTimeRow("NReminderTag_\(index+1)") {
-                                                $0.title = ""
-                                            }
-                                        }
-                                        
-                                        for (index, reminder) in self.taskDetailModel!.theTask.reminderList.enumerated() {
-                                            $0 <<< DateTimeRow("ReminderTag_\(index+1)") {
-                                                $0.title = ""
-                                                $0.value = reminder
-                                            }
-                                        }
+        form +++ MultivaluedSection(multivaluedOptions: [.Reorder, .Insert, .Delete],header: "Reminder") {
+            $0.addButtonProvider = { section in
+                return ButtonRow(){
+                    $0.title = "Add"
+                }
+            }
+            $0.multivaluedRowToInsertAt = { index in
+                return DateTimeRow("NReminderTag_\(index+1)") {
+                    $0.title = ""
+                }
+            }
+            
+            for (index, reminder) in self.taskDetailModel!.theTask.reminderList.enumerated() {
+                $0 <<< DateTimeRow("ReminderTag_\(index+1)") {
+                    $0.title = ""
+                    $0.value = reminder
+                }
+            }
         }
         
         form +++ Section("Option")

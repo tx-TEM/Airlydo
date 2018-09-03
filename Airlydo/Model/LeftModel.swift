@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import RealmSwift
 
 protocol LeftModelDelegate: class {
     func listDidChange()
