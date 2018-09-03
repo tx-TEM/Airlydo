@@ -27,7 +27,10 @@ class TaskListViewController: UIViewController {
     
     @IBAction func addTaskButtonTapped(_ sender: UIButton) {
         
-        let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as! TaskDetailViewController
+        guard let TaskDetailViewController = self.storyboard?.instantiateViewController(withIdentifier: "TaskDetailViewController") as? TaskDetailViewController else {
+            return
+        }
+        
         TaskDetailViewController.taskDetailModel = TaskDetailModel() // Set new Task
         self.navigationController?.pushViewController(TaskDetailViewController, animated: true)
     }

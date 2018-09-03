@@ -50,14 +50,14 @@ extension SignInViewController : GIDSignInDelegate {
         guard let authentication = user.authentication else { return }
         let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
                                                        accessToken: authentication.accessToken)
-        // Firebaseにログインする。
+        // SignIn to Firebase
         Auth.auth().signInAndRetrieveData(with: credential) { (user, error) in
             if error != nil {
                 // ...
                 return
             }
             
-            // User is signed in
+            
             let ContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "ContainerViewController") as! ContainerViewController
             self.present(ContainerViewController, animated: true, completion: nil)
         }

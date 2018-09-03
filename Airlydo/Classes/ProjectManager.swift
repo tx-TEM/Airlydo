@@ -15,17 +15,12 @@ struct ProjectDirPath {
     let customProjectPath: String
     let sharedProjectPath: String
     
-    init() {
-        if let cUser = Auth.auth().currentUser {
-            
-            defaultProjectPath = "/User/" + cUser.uid + "/DefaultProject"
-            customProjectPath = "/User/" + cUser.uid + "/CustomProject"
-            sharedProjectPath = "/User/" + cUser.uid + "/SharedProject"
-        } else {
-            defaultProjectPath = "/User/user1/DefaultProject"
-            customProjectPath = "/User/user1/CustomProject"
-            sharedProjectPath = "/User/user1/SharedProject"
-        }
+    init () {
+        let cUserID = Auth.auth().currentUser!.uid
+        
+        defaultProjectPath = "/User/" + cUserID + "/DefaultProject"
+        customProjectPath = "/User/" + cUserID + "/CustomProject"
+        sharedProjectPath = "/User/" + cUserID + "/SharedProject"
     }
 }
 
@@ -64,10 +59,10 @@ class ProjectManager {
     var projectOrder = [String]()
     
     let userDefaults = UserDefaults.standard
-    
     let projectDirPath = ProjectDirPath()
     
     init() {
+
         inbox = Project(projectID: "InBox", projectName: "InBox", projectDirPath: projectDirPath.defaultProjectPath)
         projectDic[inbox.projectPath] = inbox
         
@@ -148,7 +143,7 @@ class ProjectManager {
     func add(projectName: String) {
         
         if(!(projectName.isEmpty)) {
-            let newProject = Project(projectName: projectName, projectDirPath: self.projectDirPath.customProjectPath)
+            let newProject = Project(projectName: projectName, projectDirPath: projectDirPath.customProjectPath)
             
             newProject.saveData { newProjectPath in
                 if newProjectPath == "" {
