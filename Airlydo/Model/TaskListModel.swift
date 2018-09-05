@@ -138,15 +138,12 @@ class TaskListModel {
             
             // remove
             for index in tableUpdateInfo.remove {
-                print(index)
                 self.numberOfRows -= 1
                 self.delegate?.removeTask(Index: index)
-                print("remove")
             }
             
             // insert
             for index in tableUpdateInfo.insert {
-                print(index)
                 self.numberOfRows += 1
                 self.delegate?.insertTask(Index: index)
             }

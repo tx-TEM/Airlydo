@@ -105,7 +105,6 @@ class ProjectManager {
                     }
                 }
                 
-                print(self.projectOrder)
             }
             
             
@@ -127,8 +126,6 @@ class ProjectManager {
     
     // read Project Order form UserDefault
     func readOrder() {
-        print("readOrder")
-        print(self.projectOrder)
         self.projectOrder = userDefaults.object(forKey: "ProjectOrder") as? [String] ?? []
         print(self.projectOrder)
     }

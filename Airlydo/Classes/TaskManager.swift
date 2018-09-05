@@ -124,7 +124,6 @@ class TaskManager {
                 
                 tableUpdateInfo.isFirst = (self.loadCount == 0)
                 tableUpdateInfo.remove.reverse()
-                print(tableUpdateInfo.remove)
                 
                 self.loadCount += 1
                 
