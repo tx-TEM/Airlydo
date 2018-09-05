@@ -23,13 +23,23 @@ class SignInViewController: UIViewController, GIDSignInUIDelegate {
         GIDSignIn.sharedInstance().uiDelegate = self
         GIDSignIn.sharedInstance().delegate = self
         
-        if GIDSignIn.sharedInstance().hasAuthInKeychain() {
-            // Signed in
-            statusText.text = "initializing..."
-            GIDSignIn.sharedInstance().signInSilently()
+        self.statusText.text = "initializing..."
+        
+        Auth.auth().addStateDidChangeListener { (auth, user) in
             
-        } else {
-            statusText.text = "PLease Login"
+            if user != nil {
+                let ContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "ContainerViewController") as! ContainerViewController
+                self.present(ContainerViewController, animated: true, completion: nil)
+                
+            } else {
+                if GIDSignIn.sharedInstance().hasAuthInKeychain() {
+                    GIDSignIn.sharedInstance().signInSilently()
+                    
+                } else {
+                    self.statusText.text = "PLease Login"
+                }
+            }
+            
         }
         
     }
@@ -46,7 +56,7 @@ extension SignInViewController : GIDSignInDelegate {
             print(user.profile.email)
         }
         
-        // Googleのトークンを渡し、Firebaseクレデンシャルを取得する。
+        // Get Firebase Credential
         guard let authentication = user.authentication else { return }
         let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
                                                        accessToken: authentication.accessToken)
@@ -57,7 +67,7 @@ extension SignInViewController : GIDSignInDelegate {
                 return
             }
             
-            
+            print("move")
             let ContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "ContainerViewController") as! ContainerViewController
             self.present(ContainerViewController, animated: true, completion: nil)
         }
