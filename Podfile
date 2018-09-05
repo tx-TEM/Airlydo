@@ -2,7 +2,6 @@
 # platform :ios, '9.0'
 
 pod 'MCSwipeTableViewCell', '~> 2.1.4'
-pod 'RealmSwift'
 pod 'Eureka'
 pod 'SlideMenuControllerSwift'
 pod 'GoogleSignIn'
