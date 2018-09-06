@@ -67,7 +67,6 @@ extension SignInViewController : GIDSignInDelegate {
                 return
             }
             
-            print("move")
             let ContainerViewController = self.storyboard?.instantiateViewController(withIdentifier: "ContainerViewController") as! ContainerViewController
             self.present(ContainerViewController, animated: true, completion: nil)
         }

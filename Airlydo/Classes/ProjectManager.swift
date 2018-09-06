@@ -62,6 +62,7 @@ class ProjectManager {
     let projectDirPath = ProjectDirPath()
     
     init() {
+        print(projectDirPath.defaultProjectPath)
 
         inbox = Project(projectID: "InBox", projectName: "InBox", projectDirPath: projectDirPath.defaultProjectPath)
         projectDic[inbox.projectPath] = inbox

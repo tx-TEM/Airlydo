@@ -34,9 +34,6 @@ class SetNotePageController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    deinit {
-        print("call notePage deinit")
-    }
 
     /*
     // MARK: - Navigation
