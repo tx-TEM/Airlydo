@@ -50,9 +50,6 @@ class TaskListModel {
     
     init() {
         
-        // Open InBox
-        self.changeProject(selectedProjcet: Project())
-        
         // Date Formatter
         dateFormatter.locale = Locale.current
         dateFormatter.timeZone = TimeZone.ReferenceType.local

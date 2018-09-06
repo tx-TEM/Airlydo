@@ -46,8 +46,10 @@ class TaskListViewController: UIViewController {
     }
     
     @IBAction func projectSettingButtonTapped(_ sender: UIButton) {
-        let ProjectSettingViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProjectSettingViewController") as! ProjectSettingViewController
-        self.navigationController?.pushViewController(ProjectSettingViewController, animated: true)
+        
+        self.TaskCellTable.reloadData()
+        //let ProjectSettingViewController = self.storyboard?.instantiateViewController(withIdentifier: "ProjectSettingViewController") as! ProjectSettingViewController
+        //self.navigationController?.pushViewController(ProjectSettingViewController, animated: true)
     }
 
     
@@ -87,7 +89,10 @@ class TaskListViewController: UIViewController {
         
         taskListModel.delegate = self
         addLeftBarButtonWithImage(UIImage(named: "menu")!)
-
+        
+        // Open InBox
+        taskListModel.changeProject(selectedProjcet: Project())
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -105,25 +110,23 @@ class TaskListViewController: UIViewController {
 extension TaskListViewController: TaskListModelDelegate {
     func tasksDidChange() {
         self.navigationItem.title = self.taskListModel.pageTitle
-        print("reload")
         TaskCellTable.reloadData()
+        print("reload")
     }
     
     func insertTask(Index: Int) {
-        print("insert")
         self.TaskCellTable.insertRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
         self.TaskCellTable.scrollToRow(at: IndexPath(row: Index, section: 0), at: UITableViewScrollPosition.none, animated: true)
         tableAnimation(Index: Index)
+        print("insert")
     }
     
     func removeTask(Index: Int) {
-        print("remove")
         self.TaskCellTable.scrollToRow(at: IndexPath(row: Index, section: 0), at: UITableViewScrollPosition.none, animated: true)
         self.TaskCellTable.deleteRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
     }
     
     func updateTask(Index: Int) {
-        print("update")
         self.TaskCellTable.scrollToRow(at: IndexPath(row: Index, section: 0), at: UITableViewScrollPosition.none, animated: true)
         self.TaskCellTable.reloadRows(at: [IndexPath(row: Index, section: 0)], with: .fade)
     }

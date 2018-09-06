@@ -20,7 +20,8 @@ class LeftModel {
     // Delegate
     weak var delegate: LeftModelDelegate?
     
-    init() {
+    
+    func loadProjectList() {
         projectManager.loadData {
             self.delegate?.listDidChange()
         }

@@ -19,9 +19,7 @@ class LeftViewController: UIViewController {
     
     @IBOutlet weak var SlideListTable: UITableView!
     @IBOutlet weak var CustomSlideListTable: UITableView!
-    
     @IBOutlet weak var UserMail: UILabel!
-    
     @IBOutlet weak var AddListButton: UIButton!
 
 
@@ -83,12 +81,13 @@ class LeftViewController: UIViewController {
         SlideListTable.register(UINib(nibName: "SlideListCell", bundle: nil), forCellReuseIdentifier: "LSlideListCell")
         CustomSlideListTable.register(UINib(nibName: "SlideListCell", bundle: nil), forCellReuseIdentifier: "LCustomSlideListCell")
         
-        leftModel.delegate = self
-        
         // Enable Drag
         CustomSlideListTable.dragDelegate = self
         CustomSlideListTable.dropDelegate = self
         CustomSlideListTable.dragInteractionEnabled = true
+        
+        leftModel.delegate = self
+        leftModel.loadProjectList()
     }
     
     override func viewWillAppear(_ animated: Bool) {
