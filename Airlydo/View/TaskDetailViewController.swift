@@ -58,20 +58,24 @@ class TaskDetailViewController: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if taskDetailModel == nil {
-            taskDetailModel = TaskDetailModel()
+        if self.taskDetailModel == nil {
+            self.taskDetailModel = TaskDetailModel(defaultProjectPath: Project().projectPath)
         }
         
-        self.navigationItem.title = self.taskDetailModel?.pageTitle
+        guard  let taskDetailModel = self.taskDetailModel else {
+            return
+        }
+        
+        self.navigationItem.title = taskDetailModel.pageTitle
         
         form +++ Section("Task")
             <<< TextRow("TitleTag"){
                 $0.title = "Add a Task"
-                $0.value = taskDetailModel?.theTask.taskName
+                $0.value = taskDetailModel.theTask.taskName
             }
             <<< LabelRow("NoteTag"){
                 $0.title = "Note"
-                $0.value = taskDetailModel?.theTask.note
+                $0.value = taskDetailModel.theTask.note
                 }.onCellSelection{ [weak self] cell, row in
                     
                     guard let `self` = self else {
@@ -85,14 +89,14 @@ class TaskDetailViewController: FormViewController {
             
             <<< LabelRow("ProjectTag"){
                 $0.title = "Project"
-                let projPath = taskDetailModel!.theTask.projectPath
+                let projPath = taskDetailModel.theTask.projectPath
                 
                 if projPath != "" {
-                    $0.value = taskDetailModel?.projectManager.getProjectDic[projPath]?.projectName
+                    $0.value = taskDetailModel.projectManager.getProjectDic[projPath]?.projectName
                     formProjectPath = projPath
                 }else{
                     $0.value = "InBox"
-                    formProjectPath = (taskDetailModel?.projectManager.projectDirPath.defaultProjectPath)! + "/InBox"
+                    formProjectPath = Project().projectPath
                 }
                 
                 
@@ -108,17 +112,16 @@ class TaskDetailViewController: FormViewController {
                     
                     
                     // Add Action
-                    if let projectList = self.taskDetailModel?.projectManager.getProjectList() {
-                        for data in projectList {
-                            controller.addAction(UIAlertAction(title: data.projectName, style: .default, handler: {
-                                (action: UIAlertAction!) -> Void in
-                                
-                                row.value = action.title!
-                                self.formProjectPath = data.projectPath
-                                row.updateCell()
-                                
-                            }))
-                        }
+                    let projectList = taskDetailModel.projectManager.getProjectList()
+                    for data in projectList {
+                        controller.addAction(UIAlertAction(title: data.projectName, style: .default, handler: {
+                            (action: UIAlertAction!) -> Void in
+                            
+                            row.value = action.title!
+                            self.formProjectPath = data.projectPath
+                            row.updateCell()
+                            
+                        }))
                     }
                     
                     controller.addAction(UIAlertAction(title: "キャンセル", style: .cancel, handler: nil))
@@ -130,7 +133,7 @@ class TaskDetailViewController: FormViewController {
         form +++ Section("")
             <<< DateRow("DueDateTag") {
                 $0.title = "Due Date"
-                $0.value = taskDetailModel?.theTask.dueDate
+                $0.value = taskDetailModel.theTask.dueDate
                 
             }
             
@@ -141,11 +144,8 @@ class TaskDetailViewController: FormViewController {
                 var repeatArray = ["毎月","毎週","毎日", "なし"]
                 $0.options = repeatArray
                 
-                if let howRepeat = taskDetailModel?.theTask.howRepeat{
-                    $0.value = repeatArray[howRepeat]
-                }else{
-                    $0.value = repeatArray[3]
-                }
+                $0.value = repeatArray[taskDetailModel.theTask.howRepeat]
+                
         }
         
         
@@ -172,16 +172,12 @@ class TaskDetailViewController: FormViewController {
         
         form +++ Section("Option")
             <<< ActionSheetRow<String>("PriorityTag") {
+                var priorityArray = ["High","Middle","Low"]
+                
                 $0.title = "Priority"
                 $0.selectorTitle = "set priority"
-                var priorityArray = ["High","Middle","Low"]
                 $0.options = priorityArray
-                $0.value = "Middle"
-                if let priority = taskDetailModel?.theTask.priority{
-                    $0.value = priorityArray[priority]
-                }else{
-                    $0.value = priorityArray[1]
-                }
+                $0.value = priorityArray[taskDetailModel.theTask.priority]
             }
             
             <<< LabelRow("AssignTag"){

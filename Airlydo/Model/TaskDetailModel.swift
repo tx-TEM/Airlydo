@@ -12,14 +12,13 @@ class TaskDetailModel {
     
     var theTask: Task
     var projectManager = ProjectManager.default
-
     
     // Page Status
-    var pageTitle = "Add Task"
+    var pageTitle: String
     
-    
-    init() {
+    init(defaultProjectPath: String) {
         theTask = Task()
+        theTask.projectPath = defaultProjectPath
         self.pageTitle = "Add Task"
     }
     

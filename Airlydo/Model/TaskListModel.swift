@@ -39,6 +39,14 @@ class TaskListModel {
     private var isAllTask = false
     private var nowProject: Project?
     
+    var getNowProject: Project {
+        if let nowProject = nowProject {
+            return nowProject
+        } else {
+            return Project()
+        }
+    }
+    
     var sortDescriptors = SortDescriptors(firstOption: NSSortDescriptor(key: "dueDate", ascending: false),
                                           secondOption: NSSortDescriptor(key: "priority", ascending: false))
     

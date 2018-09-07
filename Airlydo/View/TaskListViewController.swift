@@ -31,7 +31,8 @@ class TaskListViewController: UIViewController {
             return
         }
         
-        TaskDetailViewController.taskDetailModel = TaskDetailModel() // Set new Task
+        // Set new Task
+        TaskDetailViewController.taskDetailModel = TaskDetailModel(defaultProjectPath: self.taskListModel.getNowProject.projectPath)
         self.navigationController?.pushViewController(TaskDetailViewController, animated: true)
     }
     
@@ -111,14 +112,15 @@ extension TaskListViewController: TaskListModelDelegate {
     func tasksDidChange() {
         self.navigationItem.title = self.taskListModel.pageTitle
         TaskCellTable.reloadData()
-        print("reload")
     }
     
     func insertTask(Index: Int) {
         self.TaskCellTable.insertRows(at: [IndexPath(row: Index, section: 0)], with: .bottom)
-        self.TaskCellTable.scrollToRow(at: IndexPath(row: Index, section: 0), at: UITableViewScrollPosition.none, animated: true)
+        CATransaction.setCompletionBlock({
+            self.TaskCellTable.scrollToRow(at: IndexPath(row: Index, section: 0), at: UITableViewScrollPosition.middle, animated: true)
+        })
+        CATransaction.commit()
         tableAnimation(Index: Index)
-        print("insert")
     }
     
     func removeTask(Index: Int) {

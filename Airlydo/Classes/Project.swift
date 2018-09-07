@@ -27,12 +27,8 @@ class Project {
     init() {
         self.projectID = "InBox"
         self.projectName = "InBox"
-        if let cUser = Auth.auth().currentUser {
-            self.projectDirPath = "/User/" + cUser.uid + "/DefaultProject"
-
-        } else {
-            self.projectDirPath = "/User/user1/DefaultProject"
-        }
+        let cUser = Auth.auth().currentUser!
+        self.projectDirPath = "/User/" + cUser.uid + "/DefaultProject"
 
     }
     
