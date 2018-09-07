@@ -107,10 +107,7 @@ class ProjectManager {
                 }
                 
             }
-            
-            
-            let source = snapshot.metadata.isFromCache ? "local cache" : "server"
-            print("Metadata: Data fetched from \(source)")
+
             self.saveOrder(order: self.projectOrder)
             print(self.projectOrder)
             completion()

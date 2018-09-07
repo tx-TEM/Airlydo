@@ -127,9 +127,6 @@ class TaskManager {
                 
                 self.loadCount += 1
                 
-                let source = snapshot.metadata.isFromCache ? "local cache" : "server"
-                print("Metadata: Data fetched from \(source)")
-                
                 completion(tableUpdateInfo)
         }
     }
